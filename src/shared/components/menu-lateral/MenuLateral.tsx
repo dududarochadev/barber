@@ -30,11 +30,7 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }
   );
 };
 
-type Props = {
-  children?: React.ReactNode,
-};
-
-export const MenuLateral: React.FC<Props> = ({ children }) => {
+export const MenuLateral: React.FC = () => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -43,7 +39,7 @@ export const MenuLateral: React.FC<Props> = ({ children }) => {
 
   return (
     <>
-      <Drawer open={isDrawerOpen} variant={smDown ? 'temporary' : 'permanent'} anchor='left' onClose={toggleDrawerOpen}>
+      <Drawer open={isDrawerOpen} variant={smDown ? 'temporary' : 'persistent'} anchor='left' onClose={toggleDrawerOpen}>
         <Box width={theme.spacing(28)} height="100%" display="flex" flexDirection="column">
           <Box width="100%" height={theme.spacing(20)} display="flex" alignItems="center" justifyContent="center">
             <Avatar
@@ -80,9 +76,9 @@ export const MenuLateral: React.FC<Props> = ({ children }) => {
         </Box>
       </Drawer>
 
-      <Box height="100vh" marginRight={smDown ? 0 : theme.spacing(28)}>
+      {/* <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(28)}>
         {children}
-      </Box>
+      </Box> */}
     </>
   );
 };
