@@ -117,17 +117,19 @@ export const FerramentasDeDetalhe: React.FC<IFerramentasDeDetalheProps> = ({
       }
 
       {mostrarBotaoVoltar && !aoCarregarBotaoVoltar &&
-        <Button
-          color='primary'
-          disableElevation
-          variant='outlined'
-          onClick={aoClicarEmVoltar}
-          startIcon={<Icon>arrow_back</Icon>}
-        >
-          <Typography variant='button' noWrap>
-            Voltar
-          </Typography>
-        </Button >
+        <Box display='flex' flex={1} justifyContent='end'>
+          <Button
+            color='primary'
+            disableElevation
+            variant='outlined'
+            onClick={aoClicarEmVoltar}
+            startIcon={<Icon>arrow_back</Icon>}
+          >
+            <Typography variant='button' noWrap>
+              Voltar
+            </Typography>
+          </Button >
+        </Box>
       }
 
       {aoCarregarBotaoVoltar &&

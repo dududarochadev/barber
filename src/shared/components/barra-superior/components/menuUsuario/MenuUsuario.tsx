@@ -33,7 +33,7 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }
 export const MenuUsuario: React.FC = () => {
   const { isMenuOpen, openMenu, closeMenu, menuOptions, anchorElProfile } = useMenuContext();
   const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <>
@@ -49,7 +49,7 @@ export const MenuUsuario: React.FC = () => {
           <Avatar
             sx={{ height: theme.spacing(4), width: theme.spacing(4) }}
           >US</Avatar>
-          {!smDown && <Typography variant='button'>Olá, <strong>usuário</strong>.</Typography>}
+          {!mdDown && <Typography variant='button'>Olá, <strong>usuário</strong>.</Typography>}
           <Icon>expand_more</Icon>
         </Box>
       </Button>
@@ -61,18 +61,12 @@ export const MenuUsuario: React.FC = () => {
             width: 260
           }
         }}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        // sx={{ mt: 2, left: 0, width: 260 }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         anchorEl={anchorElProfile}
         open={isMenuOpen}
         onClose={closeMenu}
       >
-        {/* <MenuItem disabled>
-          <Box width={260}>
-            <Typography variant="body1">Teste</Typography>
-          </Box>
-        </MenuItem> */}
-
         <Box flex={1}>
           <List component="nav">
             {menuOptions.map(menuOption => (

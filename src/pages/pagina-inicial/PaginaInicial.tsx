@@ -2,7 +2,7 @@ import Typography from '@mui/material/Typography';
 import { FerramentasDeDetalhe } from '../../shared/components';
 import { LayoutBase } from '../../shared/layouts';
 
-export const Dashboard = () => {
+export const PaginaInicial = () => {
 
   return (
     <LayoutBase
