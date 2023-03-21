@@ -1,22 +1,28 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Dashboard } from '../pages';
-import { useDrawerContext } from '../shared/contexts';
+import { Dashboard, Agendamentos, Perfil } from '../pages';
+import { Estabelecimentos } from '../pages/estabelecimentos/Estabelecimentos';
+import { useMenuContext } from '../shared/contexts';
 
 export const AppRoutes = () => {
-  const { setDrawerOptions } = useDrawerContext();
+  const { setMenuOptions } = useMenuContext();
 
   useEffect(() => {
-    setDrawerOptions([
+    setMenuOptions([
+      {
+        icon: 'person',
+        label: 'Perfil',
+        path: '/perfil'
+      },
       {
         icon: 'home',
         label: 'Página inicial',
         path: '/pagina-inicial'
       },
       {
-        icon: 'star',
-        label: 'Estrela',
-        path: '/estrela'
+        icon: 'calendar_month',
+        label: 'Agendamentos',
+        path: '/agendamentos'
       }
     ]);
   }, []);
@@ -24,6 +30,9 @@ export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/pagina-inicial" element={<Dashboard />} />
+      <Route path="/agendamentos" element={<Agendamentos />} />
+      <Route path="/perfil" element={<Perfil />} />
+      <Route path="/estabelecimentos" element={<Estabelecimentos />} />
 
       <Route path="*" element={<Navigate to="/pagina-inicial" />}></Route>
     </Routes>
