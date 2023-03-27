@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, Icon, List, ListItemButton, ListItemIcon, ListItemText, Popover, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
-import { useMenuContext } from '../../../../contexts';
+import { useAuthContext, useMenuContext } from '../../contexts';
 
 interface IListItemLinkProps {
   to: string;
@@ -33,6 +33,7 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }
 export const MenuUsuario: React.FC = () => {
   const { isMenuOpen, openMenu, closeMenu, menuOptions, anchorElProfile } = useMenuContext();
   const theme = useTheme();
+  const { logout } = useAuthContext();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
@@ -85,6 +86,7 @@ export const MenuUsuario: React.FC = () => {
           <Button
             variant="outlined"
             startIcon={<Icon>logout_rounded</Icon>}
+            onClick={logout}
           >
             Encerrar sessão
           </Button>

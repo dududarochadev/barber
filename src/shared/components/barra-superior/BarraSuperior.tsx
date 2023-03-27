@@ -2,7 +2,7 @@ import { AppBar, Autocomplete, Box, TextField, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../assets';
 import { Environment } from '../../environment';
-import { MenuUsuario } from './components/menuUsuario/MenuUsuario';
+import { MenuUsuario } from '../menu-usuario/MenuUsuario';
 
 export const BarraSuperior: React.FC = () => {
   const theme = useTheme();
