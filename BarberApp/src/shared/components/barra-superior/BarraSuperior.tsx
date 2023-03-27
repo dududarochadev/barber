@@ -1,3 +1,4 @@
+import { Search } from '@mui/icons-material';
 import { AppBar, Autocomplete, Box, TextField, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../assets';
@@ -45,9 +46,9 @@ export const BarraSuperior: React.FC = () => {
             <Autocomplete
               size='small'
               fullWidth
+              popupIcon={<Search />}
               noOptionsText="Nenhum resultado encontrado"
               options={options.map(opt => opt.descricao)}
-              freeSolo
               renderInput={(params) => (
                 <TextField
                   {...params}
