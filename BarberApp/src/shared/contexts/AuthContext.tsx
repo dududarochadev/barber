@@ -1,9 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { AuthService } from '../services/api/auth/AuthService';
+import { useNavigate } from 'react-router-dom';
+import { AuthService, IUsuario } from '../services/api/auth/AuthService';
 
 interface IAuthContextData {
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<string | void>
+  create: (usuario: IUsuario) => Promise<boolean | void>
+  login: (usuario: IUsuario) => Promise<string | void>
   logout: () => void;
 }
 
@@ -28,14 +30,25 @@ export const AuthProvider: React.FC<IProps> = ({ children }) => {
     }
   }, []);
 
-  const handleLogin = useCallback(async (email: string, password: string) => {
-    const result = await AuthService.auth(email, password);
+  const handleLogin = useCallback(async (usuario: IUsuario) => {
+    const result = await AuthService.signIn(usuario);
 
     if (result instanceof Error) {
       return result.message;
     } else {
       localStorage.setItem(LOCAL_STORAGE_KEY_ACCESS_TOKEN, JSON.stringify(result.accessToken));
       setAccesToken(result.accessToken);
+    }
+  }, []);
+
+  const handleCreate = useCallback(async (usuario: IUsuario) => {
+    const result = await AuthService.create(usuario);
+
+    if (result instanceof Error) {
+      return !!result.message;
+    } else {
+      console.log('criado');
+      return result;
     }
   }, []);
 
@@ -47,7 +60,7 @@ export const AuthProvider: React.FC<IProps> = ({ children }) => {
   const isAuthenticated = useMemo(() => !!accessToken, [accessToken]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login: handleLogin, logout: handleLogout }}>
+    <AuthContext.Provider value={{ isAuthenticated, create: handleCreate, login: handleLogin, logout: handleLogout }}>
       {children}
     </AuthContext.Provider >
   );
