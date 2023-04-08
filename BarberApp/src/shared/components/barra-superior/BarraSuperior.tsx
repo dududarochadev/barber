@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../assets';
 import { Environment } from '../../environment';
 import { MenuUsuario } from '../menu-usuario/MenuUsuario';
+import { servicoDeEstabelecimento } from '../../services/api/estabelecimento/servicoDeEstabelecimento';
+import { useQuery } from '@tanstack/react-query';
 
 export const BarraSuperior: React.FC = () => {
   const theme = useTheme();
@@ -16,7 +18,12 @@ export const BarraSuperior: React.FC = () => {
     { id: 4, descricao: 'Menezes Club' },
   ];
 
-  const handleClickImagem = () => {
+  const { data: estabelecimentos } = useQuery(
+    ['estabelecimentos'],
+    () => servicoDeEstabelecimento.obterEstabelecimentos()
+  );
+
+  const handleClickImage = () => {
     navigate('/pagina-inicial');
   };
 
@@ -26,29 +33,30 @@ export const BarraSuperior: React.FC = () => {
         <Box
           display='flex'
           flex={1}
-          justifyContent='center'
+          justifyContent='space-between'
           alignItems='center'
           maxWidth='lg'
           padding={theme.spacing(1)}
           gap={2}
         >
-          <Box marginRight='15%'>
+          <Box display='flex' flex={1}>
             <img
               src={Logo}
               alt='logo'
               height={theme.spacing(5)}
-              onClick={handleClickImagem}
+              onClick={handleClickImage}
               style={{ cursor: 'pointer' }}
             />
           </Box>
 
-          <Box display='flex' flexGrow={2}>
+          <Box display='flex' flexGrow={2} justifyContent='center'>
             <Autocomplete
+              sx={{ maxWidth: 500 }}
               size='small'
               fullWidth
               popupIcon={<Search />}
               noOptionsText="Nenhum resultado encontrado"
-              options={options.map(opt => opt.descricao)}
+              options={estabelecimentos || []}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -59,7 +67,7 @@ export const BarraSuperior: React.FC = () => {
             />
           </Box>
 
-          <Box marginLeft={1} display='flex' flex={1} justifyContent='end'>
+          <Box display='flex' flex={1} justifyContent='end'>
             <MenuUsuario />
           </Box>
         </Box>
