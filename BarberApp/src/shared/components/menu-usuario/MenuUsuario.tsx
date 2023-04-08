@@ -1,6 +1,8 @@
 import { Avatar, Box, Button, Icon, List, ListItemButton, ListItemIcon, ListItemText, Popover, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
-import { useAuthContext, useMenuContext } from '../../contexts';
+import { useMenuContext } from '../../contexts';
+import { useCallback } from 'react';
+import { servicoDeUsuario } from '../../services/api/auth/servicoDeUsuario';
 
 interface IListItemLinkProps {
   to: string;
@@ -11,7 +13,6 @@ interface IListItemLinkProps {
 
 const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }) => {
   const navigate = useNavigate();
-
   const resolvedPath = useResolvedPath(to);
   const match = useMatch({ path: resolvedPath.pathname });
 
@@ -33,8 +34,12 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }
 export const MenuUsuario: React.FC = () => {
   const { isMenuOpen, openMenu, closeMenu, menuOptions, anchorElProfile } = useMenuContext();
   const theme = useTheme();
-  const { logout } = useAuthContext();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+
+  const handleLogout = useCallback(async () => {
+    await servicoDeUsuario.logout();
+  }, []);
+
 
   return (
     <>
@@ -50,7 +55,7 @@ export const MenuUsuario: React.FC = () => {
           <Avatar
             sx={{ height: theme.spacing(4), width: theme.spacing(4) }}
           >US</Avatar>
-          {!mdDown && <Typography variant='button'>Olá, <strong>usuário</strong>.</Typography>}
+          {!mdDown && <Typography variant='button'>Olá, <strong>{'usuário'}</strong>.</Typography>}
           <Icon>expand_more</Icon>
         </Box>
       </Button>
@@ -86,7 +91,7 @@ export const MenuUsuario: React.FC = () => {
           <Button
             variant="outlined"
             startIcon={<Icon>logout_rounded</Icon>}
-            onClick={logout}
+            onClick={handleLogout}
           >
             Encerrar sessão
           </Button>

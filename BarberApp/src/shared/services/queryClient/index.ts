@@ -9,7 +9,8 @@ export const queryClient = new QueryClient({
     queries: {
       onError: async (err: any) => {
         if (err.statusCode === 401) {
-          redirect(Environment.baseUrl + '/pagina-inicial');
+          localStorage.removeItem('access_token');
+          redirect(Environment.baseUrl + '/login');
         }
 
         feedback(String(err), 'error');
