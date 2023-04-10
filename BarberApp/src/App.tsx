@@ -5,6 +5,7 @@ import { SplashScreen } from './shared/components';
 import { AppThemeProvider, MenuProvider } from './shared/contexts';
 import { queryClient } from './shared/services/queryClient';
 import { useState } from 'react';
+import { AuthProvider } from './shared/contexts/AuthContext';
 
 export const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -12,15 +13,17 @@ export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AppThemeProvider>
-          {isLoading ? (
-            <SplashScreen setIsLoading={setIsLoading} />
-          ) : (
-            <MenuProvider>
-              <AppRoutes />
-            </MenuProvider>
-          )}
-        </AppThemeProvider>
+        <AuthProvider>
+          <AppThemeProvider>
+            {isLoading ? (
+              <SplashScreen setIsLoading={setIsLoading} />
+            ) : (
+              <MenuProvider>
+                <AppRoutes />
+              </MenuProvider>
+            )}
+          </AppThemeProvider>
+        </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
