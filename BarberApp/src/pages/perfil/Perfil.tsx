@@ -1,36 +1,102 @@
-import { Box } from '@mui/material';
-import { FormHandles, Scope } from '@unform/core';
+import { Avatar, Box, Button, ButtonGroup, Grid, Icon, IconButton, Typography } from '@mui/material';
+import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { VTextField } from '../../shared/forms';
 import { LayoutBase } from '../../shared/layouts';
+import { useQuery } from '@tanstack/react-query';
+import { servicoDeUsuario } from '../../shared/services/api/usuario/servicoDeUsuario';
+import { useUserContext } from '../../shared/contexts/UserContext';
 
-interface IFormData {
-  email: string;
-  cidade: string;
-  nome: string;
-}
+// interface IFormData {
+//   email: string;
+//   cidade: string;
+//   nome: string;
+// }
 
 export const Perfil: React.FC = () => {
-  const formRef = useRef<FormHandles>(null);
+  const [editarNome, setEditarNome] = useState(false);
+  const [nomeUsuario, setNomeUsuario] = useState<string>();
+  const [sexoMasculino, setSexoMasculino] = useState(false);
 
-  const handleSave = (dados: IFormData) => {
+  const formRef = useRef<FormHandles>(null);
+  const { idUsuario } = useUserContext();
+
+  const { data: usuario } = useQuery(
+    ['usuario'],
+    () => servicoDeUsuario.obterPorId(idUsuario)
+  );
+
+  useEffect(() => {
+    if (usuario) {
+      setSexoMasculino(usuario.sexo === 1);
+      setNomeUsuario(usuario.nome);
+    }
+  }, [usuario]);
+
+  const handleSubmit = useCallback(() => {
+    formRef.current?.submitForm();
+  }, []);
+
+  const handleSaveEditarNome = useCallback(() => {
+    setEditarNome(false);
+    handleSubmit;
+  }, []);
+
+  const handleSave = useCallback(() => {
+    const dados = formRef.current?.getData();
     console.log(dados);
-  };
+  }, []);
+
   return (
-    <LayoutBase titulo='perfil'>
-      <Form ref={formRef} onSubmit={console.log}>
-        <Box display='flex' flexDirection='column' gap={2}>
-          <VTextField name='nomeCompleto' />
-          <VTextField name='login' />
-          {[1, 2, 3, 4].map((_, index) => (
-            <Scope key='' path={`endereco[${index}]`}>
-              <VTextField name='rua' />
-              <VTextField name='numero' />
-            </Scope>
-          ))}
-        </Box>
-      </Form>
-    </LayoutBase >
+    <LayoutBase titulo='Perfil de usuário'>
+      {usuario && <Form ref={formRef} onSubmit={console.log} initialData={usuario}>
+        <Grid container display='flex' flexDirection='column' gap={3}>
+          <Grid item xs={12} sm={8}>
+            <Box display='flex' flexDirection='row' gap={2} flex={1} alignItems='center'>
+              <Avatar src='' sx={{ width: 100, height: 100 }}>USU</Avatar>
+
+              {!editarNome ? (
+                <Box display='flex' flexDirection='row' alignItems='center'>
+                  <Typography fontSize={25}>{nomeUsuario}</Typography>
+                  <IconButton onClick={() => setEditarNome(true)}><Icon>edit</Icon></IconButton>
+                </Box>
+              ) : (
+                <VTextField
+                  sx={{ minWidth: 400 }}
+                  variant='standard'
+                  name='nome'
+                  label='Nome'
+                  onChange={(e) => setNomeUsuario(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSaveEditarNome()}
+                  onBlur={() => handleSaveEditarNome()} />
+              )}
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} sm={8}>
+            <VTextField name='email' label='E-mail' />
+          </Grid>
+
+          <Grid item xs={12} sm={8} display='flex' flexDirection='row' gap={3}>
+            <VTextField name='cpf' label='CPF' />
+            <VTextField name='phoneNumber' label='Telefone' />
+          </Grid>
+
+          <Grid item xs={12} sm={8} display='flex' flexDirection='row' alignItems='center' gap={2}>
+            <Typography>Sexo: </Typography>
+            <ButtonGroup>
+              <Button color='secondary' sx={{ width: 120, borderRadius: 28 }} onClick={() => setSexoMasculino(true)} variant={sexoMasculino ? 'contained' : 'outlined'}>Masculino</Button>
+              <Button color='secondary' sx={{ width: 120, borderRadius: 28 }} onClick={() => setSexoMasculino(false)} variant={sexoMasculino ? 'outlined' : 'contained'}>Feminino</Button>
+            </ButtonGroup>
+          </Grid>
+
+          <Grid item xs={12} sm={8} display='flex' justifyContent='end'>
+            <Button variant='contained' sx={{ width: 200 }} onClick={handleSave}>Salvar</Button>
+          </Grid>
+        </Grid>
+      </Form >
+      }
+    </LayoutBase>
   );
 };
