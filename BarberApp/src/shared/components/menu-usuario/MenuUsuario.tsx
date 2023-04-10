@@ -3,6 +3,7 @@ import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { useMenuContext } from '../../contexts';
 import { useCallback } from 'react';
 import { servicoDeAutenticacao } from '../../services/api/auth/servicoDeAutenticacao';
+import { useAuthContext } from '../../contexts/AuthContext';
 
 interface IListItemLinkProps {
   to: string;
@@ -35,6 +36,7 @@ export const MenuUsuario: React.FC = () => {
   const { isMenuOpen, openMenu, closeMenu, menuOptions, anchorElProfile } = useMenuContext();
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const { nomeUsuario } = useAuthContext();
 
   const handleLogout = useCallback(async () => {
     await servicoDeAutenticacao.logout();
@@ -55,7 +57,7 @@ export const MenuUsuario: React.FC = () => {
           <Avatar
             sx={{ height: theme.spacing(4), width: theme.spacing(4) }}
           >US</Avatar>
-          {!mdDown && <Typography variant='button'>Olá, <strong>{'usuário'}</strong>.</Typography>}
+          {!mdDown && <Typography variant='button'>Olá, <strong>{nomeUsuario}</strong>.</Typography>}
           <Icon>expand_more</Icon>
         </Box>
       </Button>

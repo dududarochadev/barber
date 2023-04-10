@@ -23,7 +23,7 @@ export const BarraSuperior: React.FC = () => {
   };
 
   return (
-    <AppBar position='relative'>
+    <AppBar color='inherit' position='relative'>
       <Box display='flex' flex={1} alignContent='center' justifyContent='center'>
         <Box
           display='flex'
