@@ -54,7 +54,7 @@ const cadastrar = async (body: ICadastroUsuario): Promise<boolean> => {
   }
 };
 
-export const servicoDeUsuario = {
+export const servicoDeAutenticacao = {
   login,
   logout,
   cadastrar

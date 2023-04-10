@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Icon, List, ListItemButton, ListItemIcon, ListItem
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { useMenuContext } from '../../contexts';
 import { useCallback } from 'react';
-import { servicoDeUsuario } from '../../services/api/auth/servicoDeUsuario';
+import { servicoDeAutenticacao } from '../../services/api/auth/servicoDeAutenticacao';
 
 interface IListItemLinkProps {
   to: string;
@@ -37,7 +37,7 @@ export const MenuUsuario: React.FC = () => {
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleLogout = useCallback(async () => {
-    await servicoDeUsuario.logout();
+    await servicoDeAutenticacao.logout();
   }, []);
 
 

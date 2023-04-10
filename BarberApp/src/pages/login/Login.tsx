@@ -8,7 +8,7 @@ import { FormHandles } from '@unform/core';
 import getValidationErrors from '../../shared/helpers/getValidationErrors';
 import { Visibility } from '@mui/icons-material';
 import { gapi } from 'gapi-script';
-import { ICadastroUsuario, ILogin, servicoDeUsuario } from '../../shared/services/api/auth/servicoDeUsuario';
+import { ICadastroUsuario, ILogin, servicoDeAutenticacao } from '../../shared/services/api/auth/servicoDeAutenticacao';
 import { useNavigate } from 'react-router-dom';
 
 interface IFormData {
@@ -66,7 +66,7 @@ export const Login: React.FC = () => {
 
   const handleLogin = useCallback(async (usuario: ILogin) => {
     try {
-      await servicoDeUsuario.login(usuario);
+      await servicoDeAutenticacao.login(usuario);
 
       navigate('/pagina-inicial');
     }
@@ -78,7 +78,7 @@ export const Login: React.FC = () => {
 
   const handleCadastro = useCallback(async (usuario: ICadastroUsuario) => {
     try {
-      await servicoDeUsuario.cadastrar(usuario);
+      await servicoDeAutenticacao.cadastrar(usuario);
 
       navigate('/pagina-inicial');
     }
