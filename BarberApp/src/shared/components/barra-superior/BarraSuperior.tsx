@@ -1,26 +1,21 @@
-import { Search } from '@mui/icons-material';
-import { AppBar, Autocomplete, Box, TextField, useTheme } from '@mui/material';
+import { Brightness4, Brightness7 } from '@mui/icons-material';
+import { AppBar, Autocomplete, Box, IconButton, TextField, Tooltip, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Logo } from '../../assets';
 import { Environment } from '../../environment';
 import { MenuUsuario } from '../menu-usuario/MenuUsuario';
-import { servicoDeEstabelecimento } from '../../services/api/estabelecimento/servicoDeEstabelecimento';
 import { useQuery } from '@tanstack/react-query';
+import { useAppThemeContext } from '../../contexts';
+import { servicoDeEstabelecimento } from '../../services/api/estabelecimento/servicoDeEstabelecimento';
 
 export const BarraSuperior: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-
-  const options = [
-    { id: 1, descricao: 'La Mafia' },
-    { id: 2, descricao: 'Beto Hair' },
-    { id: 3, descricao: 'Barbearia do seu Zé' },
-    { id: 4, descricao: 'Menezes Club' },
-  ];
+  const { toggleTheme } = useAppThemeContext();
 
   const { data: estabelecimentos } = useQuery(
     ['estabelecimentos'],
-    () => servicoDeEstabelecimento.obterEstabelecimentos()
+    servicoDeEstabelecimento.obterEstabelecimentos
   );
 
   const handleClickImage = () => {
@@ -49,12 +44,12 @@ export const BarraSuperior: React.FC = () => {
             />
           </Box>
 
-          <Box display='flex' flexGrow={2} justifyContent='center'>
+          <Box display='flex' flexGrow={2} justifyContent='center' alignItems='center' gap={2}>
             <Autocomplete
               sx={{ maxWidth: 500 }}
               size='small'
               fullWidth
-              popupIcon={<Search />}
+              freeSolo
               noOptionsText="Nenhum resultado encontrado"
               options={estabelecimentos || []}
               renderInput={(params) => (
@@ -68,6 +63,17 @@ export const BarraSuperior: React.FC = () => {
           </Box>
 
           <Box display='flex' flex={1} justifyContent='end'>
+            <Tooltip
+              title={
+                theme.palette.mode === 'dark'
+                  ? 'Mudar para tema Light'
+                  : 'Mudar para tema Dark'
+              }>
+              <IconButton sx={{ ml: 1 }} onClick={toggleTheme} color="inherit">
+                {theme.palette.mode === 'dark' ? <Brightness4 /> : <Brightness7 />}
+              </IconButton>
+            </Tooltip>
+
             <MenuUsuario />
           </Box>
         </Box>
