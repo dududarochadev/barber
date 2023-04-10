@@ -24,6 +24,7 @@ export const VTextField: React.FC<TVTextFieldProps> = ({ name, ...rest }) => {
   return (
     <TextField
       {...rest}
+      fullWidth
       error={!!error}
       helperText={error}
       defaultValue={defaultValue}
