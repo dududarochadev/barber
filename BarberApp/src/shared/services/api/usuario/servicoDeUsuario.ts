@@ -1,6 +1,7 @@
 import { Api } from '../axios-config';
 
 interface IUsuario {
+  id: number;
   nome: string;
   email: string;
   cpf?: string;
