@@ -30,6 +30,12 @@ x64/
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
+*.suo
+*.user
+_ReSharper.*
+bin
+obj
+packages
 
 *_i.c
 *_p.c
