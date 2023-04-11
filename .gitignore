@@ -150,3 +150,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
+BarberApi/bin
+BarberApi/obj
