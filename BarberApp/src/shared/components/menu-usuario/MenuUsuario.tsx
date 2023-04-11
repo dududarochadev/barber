@@ -3,7 +3,7 @@ import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { useMenuContext } from '../../contexts';
 import { useCallback } from 'react';
 import { servicoDeAutenticacao } from '../../services/api/auth/servicoDeAutenticacao';
-import { useAuthContext } from '../../contexts/AuthContext';
+import { useUserContext } from '../../contexts/UserContext';
 
 interface IListItemLinkProps {
   to: string;
@@ -36,7 +36,7 @@ export const MenuUsuario: React.FC = () => {
   const { isMenuOpen, openMenu, closeMenu, menuOptions, anchorElProfile } = useMenuContext();
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const { nomeUsuario } = useAuthContext();
+  const { nomeUsuario } = useUserContext();
 
   const handleLogout = useCallback(async () => {
     await servicoDeAutenticacao.logout();
