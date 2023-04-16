@@ -1,10 +1,10 @@
 import { Box, Container, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { ReactNode } from 'react';
-import { BarraSuperior } from '../components/barra-superior/BarraSuperior';
+import { BarraSuperior } from '../components/Barber/barra-superior/BarraSuperior';
 
 type Props = {
   children?: React.ReactNode;
-  titulo: string;
+  titulo?: string;
   barraDeFerramentas?: ReactNode;
 };
 
@@ -17,9 +17,9 @@ export const LayoutBase: React.FC<Props> = ({ children, titulo, barraDeFerrament
     <Box>
       <BarraSuperior />
 
-      <Box height='100%' display='flex' flexDirection='column'>
-        <main style={{ flexGrow: 1 }}>
-          <Container style={{ padding: 0 }} maxWidth='lg'>
+      <Box height='100%' display='flex' flexDirection='column' padding={3}>
+        <main style={{ flexGrow: 1, maxWidth: 'lg' }}>
+          {titulo &&
             <Box
               padding={1}
               display='flex'
@@ -31,15 +31,15 @@ export const LayoutBase: React.FC<Props> = ({ children, titulo, barraDeFerrament
                 {titulo}
               </Typography>
             </Box>
+          }
 
-            {barraDeFerramentas &&
-              <Box marginBottom={2}>
-                {barraDeFerramentas}
-              </Box>
-            }
+          {barraDeFerramentas &&
+            <Box marginBottom={2}>
+              {barraDeFerramentas}
+            </Box>
+          }
 
-            {children}
-          </Container>
+          {children}
         </main>
       </Box >
     </Box>

@@ -1,12 +1,12 @@
 import { Brightness4, Brightness7 } from '@mui/icons-material';
 import { AppBar, Autocomplete, Box, IconButton, TextField, Tooltip, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Logo } from '../../assets';
-import { Environment } from '../../environment';
-import { MenuUsuario } from '../menu-usuario/MenuUsuario';
+import { Logo } from '../../../assets';
+import { Environment } from '../../../environment';
 import { useQuery } from '@tanstack/react-query';
-import { useAppThemeContext } from '../../contexts';
-import { servicoDeEstabelecimento } from '../../services/api/estabelecimento/servicoDeEstabelecimento';
+import { useAppThemeContext } from '../../../contexts';
+import { servicoDeEstabelecimento } from '../../../services/api/estabelecimento/servicoDeEstabelecimento';
+import { MenuUsuario } from '../menu-usuario/MenuUsuario';
 
 export const BarraSuperior: React.FC = () => {
   const theme = useTheme();
@@ -30,8 +30,8 @@ export const BarraSuperior: React.FC = () => {
           flex={1}
           justifyContent='space-between'
           alignItems='center'
-          maxWidth='lg'
-          padding={theme.spacing(1)}
+          paddingX={theme.spacing(4)}
+          paddingY={theme.spacing(2)}
           gap={2}
         >
           <Box display='flex' flex={1}>

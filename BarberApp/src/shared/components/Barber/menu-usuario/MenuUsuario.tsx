@@ -1,9 +1,9 @@
 import { Avatar, Box, Button, Icon, List, ListItemButton, ListItemIcon, ListItemText, Popover, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
-import { useMenuContext } from '../../contexts';
 import { useCallback } from 'react';
-import { servicoDeAutenticacao } from '../../services/api/auth/servicoDeAutenticacao';
-import { useUserContext } from '../../contexts/UserContext';
+import { useUserContext } from '../../../contexts/UserContext';
+import { useMenuContext } from '../../../contexts';
+import { servicoDeAutenticacao } from '../../../services/api/auth/servicoDeAutenticacao';
 
 interface IListItemLinkProps {
   to: string;
@@ -35,7 +35,7 @@ const ListItemLink: React.FC<IListItemLinkProps> = ({ to, icon, label, onClick }
 export const MenuUsuario: React.FC = () => {
   const { isMenuOpen, openMenu, closeMenu, menuOptions, anchorElProfile } = useMenuContext();
   const theme = useTheme();
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const lgDown = useMediaQuery(theme.breakpoints.down('lg'));
   const { nomeUsuario } = useUserContext();
 
   const handleLogout = useCallback(async () => {
@@ -57,7 +57,7 @@ export const MenuUsuario: React.FC = () => {
           <Avatar
             sx={{ height: theme.spacing(4), width: theme.spacing(4) }}
           >US</Avatar>
-          {!mdDown && <Typography variant='button'>Olá, <strong>{nomeUsuario}</strong>.</Typography>}
+          {!lgDown && <Typography variant='button'>Olá, <strong>{nomeUsuario}</strong>.</Typography>}
           <Icon>expand_more</Icon>
         </Box>
       </Button>

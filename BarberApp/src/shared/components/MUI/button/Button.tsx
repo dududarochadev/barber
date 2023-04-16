@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { Fade, Grid, Typography, LinearProgress, useTheme } from '@mui/material';
-import { Logo } from '../../assets';
+import { Logo } from '../../../assets';
 
 interface ISplashScreen {
   setIsLoading?: (isLoading: boolean) => void;
