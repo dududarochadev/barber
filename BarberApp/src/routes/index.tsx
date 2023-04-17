@@ -18,6 +18,11 @@ export const AppRoutes: React.FC = () => {
         icon: 'calendar_month',
         label: 'Agendamentos',
         path: '/agendamentos'
+      },
+      {
+        icon: 'apartment',
+        label: 'Estabelecimento',
+        path: '/estabelecimentos'
       }
     ]);
   }, []);

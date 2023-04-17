@@ -2,12 +2,13 @@ import { Api } from '../axios-config';
 
 interface IUsuario {
   id: number;
-  nome: string;
+  nomeCompleto: string;
+  primeiroNome: string;
   email: string;
   cpf?: string;
-  telefone?: number;
+  telefone?: string;
   sexo: number;
-  imagem: string;
+  foto: string;
 }
 
 const obterPorId = async (id: number): Promise<IUsuario> => {

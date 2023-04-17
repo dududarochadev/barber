@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Box, Button, Card, CardActions, CardContent, CircularProgress, Divider, Icon, IconButton, InputAdornment, Tooltip, Typography } from '@mui/material';
+import { Alert, Box, Card, CardActions, CardContent, CircularProgress, Divider, Icon, IconButton, InputAdornment, Tooltip, Typography } from '@mui/material';
 
 import * as Yup from 'yup';
 import { VTextField } from '../../shared/forms';
@@ -10,6 +10,7 @@ import { Visibility } from '@mui/icons-material';
 import { gapi } from 'gapi-script';
 import { ICadastroUsuario, ILogin, servicoDeAutenticacao } from '../../shared/services/api/auth/servicoDeAutenticacao';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '../../shared/components/MUI/button/Button';
 
 interface IFormData {
   nomeCompleto: string,
@@ -175,7 +176,12 @@ export const Login: React.FC = () => {
                 />
 
                 <Box display='flex' justifyContent='left'>
-                  <Button variant='text' onClick={() => undefined} style={{ fontSize: 12 }}>Esqueceu sua senha?</Button>
+                  <Button
+                    label='Esqueceu sua senha?'
+                    variant='text'
+                    onClick={() => undefined}
+                    style={{ fontSize: 12 }}
+                  />
                 </Box>
               </Box>
             </CardContent>
@@ -187,14 +193,13 @@ export const Login: React.FC = () => {
               <Box display='flex' flexDirection='column' gap={2} width={300} paddingX={2}>
 
                 <Button
+                  label='Entrar'
                   variant='contained'
                   disabled={isLoadingLogin}
                   onClick={handleContinue}
-                  endIcon={isLoadingLogin ? <CircularProgress variant='indeterminate' color='inherit' size={20} /> : undefined}
+                  loading={isLoadingLogin}
                   type='submit'
-                >
-                  Entrar
-                </Button>
+                />
 
                 <Box display='flex' justifyContent='center'>
                   <Typography>Ou</Typography>
@@ -214,10 +219,11 @@ export const Login: React.FC = () => {
                   <Typography fontSize={14}>Não possui uma conta?</Typography>
 
                   <Button
+                    label='Cadastre-se'
                     variant='text'
                     size='small'
-                    onClick={handleClickCadastroLogin}>
-                    Cadastre-se</Button>
+                    onClick={handleClickCadastroLogin}
+                  />
                 </Box>
               </Box>
             </CardActions>
@@ -310,7 +316,11 @@ export const Login: React.FC = () => {
                 </Box>
 
                 <Box display='flex' justifyContent='left'>
-                  <Button variant='text' style={{ fontSize: 12 }}>Esqueceu sua senha?</Button>
+                  <Button
+                    label='Esqueceu sua senha?'
+                    variant='text'
+                    style={{ fontSize: 12 }}
+                  />
                 </Box>
               </Box>
             </CardContent>
@@ -322,14 +332,13 @@ export const Login: React.FC = () => {
               <Box display='flex' flexDirection='column' gap={2} width={300} paddingX={2}>
 
                 <Button
+                  label='Cadastrar'
                   variant='contained'
                   disabled={isLoadingCadastro}
                   onClick={handleContinue}
                   type='submit'
-                  endIcon={isLoadingCadastro ? <CircularProgress variant='indeterminate' color='inherit' size={20} /> : undefined}
-                >
-                  Cadastrar
-                </Button>
+                  loading={isLoadingCadastro}
+                />
 
                 <Divider variant='middle' />
 
@@ -337,10 +346,11 @@ export const Login: React.FC = () => {
                   <Typography fontSize={14}>Já possui uma conta?</Typography>
 
                   <Button
+                    label='Login'
                     variant='text'
                     size='small'
-                    onClick={handleClickCadastroLogin}>
-                    Login</Button>
+                    onClick={handleClickCadastroLogin}
+                  />
                 </Box>
               </Box>
             </CardActions>

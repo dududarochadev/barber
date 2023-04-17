@@ -19,27 +19,29 @@ export const LayoutBase: React.FC<Props> = ({ children, titulo, barraDeFerrament
 
       <Box height='100%' display='flex' flexDirection='column' padding={3}>
         <main style={{ flexGrow: 1, maxWidth: 'lg' }}>
-          {titulo &&
-            <Box
-              padding={1}
-              display='flex'
-              alignItems='center'
-              gap={1}
-              height={theme.spacing(smDown ? 4 : mdDown ? 6 : 8)}
-            >
-              <Typography noWrap variant={smDown ? 'h6' : mdDown ? 'h5' : 'h4'}>
-                {titulo}
-              </Typography>
-            </Box>
-          }
+          <Container maxWidth='lg'>
+            {titulo &&
+              <Box
+                padding={1}
+                display='flex'
+                alignItems='center'
+                gap={1}
+                height={theme.spacing(smDown ? 4 : mdDown ? 6 : 8)}
+              >
+                <Typography noWrap variant={smDown ? 'h6' : mdDown ? 'h5' : 'h4'}>
+                  {titulo}
+                </Typography>
+              </Box>
+            }
 
-          {barraDeFerramentas &&
-            <Box marginBottom={2}>
-              {barraDeFerramentas}
-            </Box>
-          }
+            {barraDeFerramentas &&
+              <Box marginBottom={2}>
+                {barraDeFerramentas}
+              </Box>
+            }
 
-          {children}
+            {children}
+          </Container>
         </main>
       </Box >
     </Box>

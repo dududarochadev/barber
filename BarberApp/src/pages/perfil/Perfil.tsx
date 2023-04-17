@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, ButtonGroup, Grid, Icon, IconButton, Typography } from '@mui/material';
+import { Avatar, Box, ButtonGroup, Grid, Icon, IconButton, Typography } from '@mui/material';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -7,6 +7,7 @@ import { LayoutBase } from '../../shared/layouts';
 import { useQuery } from '@tanstack/react-query';
 import { servicoDeUsuario } from '../../shared/services/api/usuario/servicoDeUsuario';
 import { useUserContext } from '../../shared/contexts/UserContext';
+import { Button } from '../../shared/components/MUI/button/Button';
 
 // interface IFormData {
 //   email: string;
@@ -30,7 +31,7 @@ export const Perfil: React.FC = () => {
   useEffect(() => {
     if (usuario) {
       setSexoMasculino(usuario.sexo === 1);
-      setNomeUsuario(usuario.nome);
+      setNomeUsuario(usuario.nomeCompleto);
     }
   }, [usuario]);
 
@@ -86,13 +87,26 @@ export const Perfil: React.FC = () => {
           <Grid item xs={12} sm={8} display='flex' flexDirection='row' alignItems='center' gap={2}>
             <Typography>Sexo: </Typography>
             <ButtonGroup>
-              <Button color='secondary' sx={{ width: 120, borderRadius: 28 }} onClick={() => setSexoMasculino(true)} variant={sexoMasculino ? 'contained' : 'outlined'}>Masculino</Button>
-              <Button color='secondary' sx={{ width: 120, borderRadius: 28 }} onClick={() => setSexoMasculino(false)} variant={sexoMasculino ? 'outlined' : 'contained'}>Feminino</Button>
+              <Button
+                label='Masculino'
+                color='secondary'
+                onClick={() => setSexoMasculino(true)} variant={sexoMasculino ? 'contained' : 'outlined'}
+              />
+              <Button
+                label='Feminino'
+                color='secondary'
+                onClick={() => setSexoMasculino(true)} variant={sexoMasculino ? 'outlined' : 'contained'}
+              />
             </ButtonGroup>
           </Grid>
 
           <Grid item xs={12} sm={8} display='flex' justifyContent='end'>
-            <Button variant='contained' sx={{ width: 200 }} onClick={handleSave}>Salvar</Button>
+            <Button
+              label='Salvar'
+              variant='contained'
+              minWidth={200}
+              onClick={handleSave}
+            />
           </Grid>
         </Grid>
       </Form >
