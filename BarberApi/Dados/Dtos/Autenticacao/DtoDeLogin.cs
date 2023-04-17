@@ -1,4 +1,4 @@
-namespace BarberApi.Dados.Dtos
+namespace BarberApi.Dados.Autenticacao.Dtos
 {
     public class DtoDeLogin
     {
