@@ -1,5 +1,5 @@
+using BarberApi.Dados.Models;
 using BarberApi.Dto;
-using BarberApi.Models;
 
 namespace BarberApi.Servicos.Interfaces.Auth
 {

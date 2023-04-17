@@ -1,4 +1,4 @@
-using BarberApi.Models;
+using BarberApi.Dados.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberApi.Servicos.Interfaces.Auth

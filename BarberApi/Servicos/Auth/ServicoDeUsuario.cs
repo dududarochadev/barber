@@ -1,5 +1,5 @@
+using BarberApi.Dados.Models;
 using BarberApi.Dto;
-using BarberApi.Models;
 using BarberApi.Servicos.Interfaces.Auth;
 using Microsoft.AspNetCore.Identity;
 
@@ -49,7 +49,7 @@ namespace BarberApi.Servicos.Auth
             {
                 UserName = usuarioCadastro.Email,
                 Email = usuarioCadastro.Email,
-                NomeCompleto = usuarioCadastro.NomeCompleto,
+                Nome = usuarioCadastro.NomeCompleto,
                 PhoneNumber = usuarioCadastro.Telefone,
                 Cpf = usuarioCadastro.Cpf,
             };

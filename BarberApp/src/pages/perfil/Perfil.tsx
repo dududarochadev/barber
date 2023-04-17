@@ -54,25 +54,19 @@ export const Perfil: React.FC = () => {
       {usuario && <Form ref={formRef} onSubmit={console.log} initialData={usuario}>
         <Grid container display='flex' flexDirection='column' gap={3}>
           <Grid item xs={12} sm={8}>
-            <Box display='flex' flexDirection='row' gap={2} flex={1} alignItems='center'>
-              <Avatar src='' sx={{ width: 100, height: 100 }}>USU</Avatar>
-
-              {!editarNome ? (
-                <Box display='flex' flexDirection='row' alignItems='center'>
-                  <Typography fontSize={25}>{nomeUsuario}</Typography>
-                  <IconButton onClick={() => setEditarNome(true)}><Icon>edit</Icon></IconButton>
-                </Box>
-              ) : (
-                <VTextField
-                  sx={{ minWidth: 400 }}
-                  variant='standard'
-                  name='nome'
-                  label='Nome'
-                  onChange={(e) => setNomeUsuario(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSaveEditarNome()}
-                  onBlur={() => handleSaveEditarNome()} />
-              )}
+            <Box>
+              <Avatar src='' sx={{ width: 150, height: 150 }}>USU</Avatar>
             </Box>
+          </Grid>
+
+          <Grid item xs={12} sm={8}>
+            <VTextField
+              sx={{ minWidth: 400 }}
+              name='nomeCompleto'
+              label='Nome'
+              onChange={(e) => setNomeUsuario(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSaveEditarNome()}
+              onBlur={() => handleSaveEditarNome()} />
           </Grid>
 
           <Grid item xs={12} sm={8}>

@@ -1,19 +1,25 @@
 using System.Text;
-using BarberApi.Models;
+using BarberApi.Dados;
+using BarberApi.Dados.Models;
 using BarberApi.Servicos.Auth;
 using BarberApi.Servicos.Interfaces.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Migrador.Api", Version = "v1" });
+});
 
-var connectionString = builder.Configuration["ConnectionStrings:ConnectionString"];
+builder.Services.AddDbContext<Contexto>(opt => opt.UseSqlServer(builder.Configuration["ConnectionStrings:ConnectionString"]));
 
-builder.Services.AddDbContext<Contexto>(options => options.UseSqlServer(connectionString));
+builder.Services.AddCors();
 
 builder.Services.AddIdentity<Usuario, IdentityRole<int>>(opt =>
     {
@@ -70,10 +76,7 @@ builder.Services.AddAuthentication(opt =>
 builder.Services.AddScoped<IServicoDeUsuario, ServicoDeUsuario>();
 builder.Services.AddScoped<IServicoDeToken, ServicoDeToken>();
 
-builder.Services.AddCors();
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

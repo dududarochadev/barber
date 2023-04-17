@@ -11,5 +11,10 @@ namespace BarberApi.Dados
         {
 
         }
+
+        public DbSet<Estabelecimento> Estabelecimento { get; set; }
+        public DbSet<Funcionario> Funcionario { get; set; }
+        public DbSet<FuncionarioServico> FuncionarioServico { get; set; }
+        public DbSet<Servico> Servico { get; set; }
     }
 }

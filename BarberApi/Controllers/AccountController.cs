@@ -59,7 +59,7 @@ namespace BarberApi.Controllers
 
                 var retorno = new DtoDeRetornoLogin
                 {
-                    NomeCompleto = usuario.NomeCompleto,
+                    Nome = usuario.Nome,
                     Token = token
                 };
 

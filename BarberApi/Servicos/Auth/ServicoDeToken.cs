@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using BarberApi.Models;
+using BarberApi.Dados.Models;
 using BarberApi.Servicos.Interfaces.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -23,7 +23,7 @@ namespace BarberApi.Servicos.Auth
 
             if (!string.IsNullOrEmpty(usuario.UserName))
             {
-                claims.Add(new Claim(ClaimTypes.Name, usuario.NomeCompleto));
+                claims.Add(new Claim(ClaimTypes.Name, usuario.Nome));
             }
 
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]));
