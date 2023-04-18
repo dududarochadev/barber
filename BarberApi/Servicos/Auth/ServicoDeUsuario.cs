@@ -1,5 +1,5 @@
+using BarberApi.Dados.Autenticacao.Dtos;
 using BarberApi.Dados.Models;
-using BarberApi.Dto;
 using BarberApi.Servicos.Interfaces.Auth;
 using Microsoft.AspNetCore.Identity;
 
@@ -29,7 +29,7 @@ namespace BarberApi.Servicos.Auth
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<bool> Cadastrar(DtoDeCadastro usuarioCadastro)
+        public async Task<bool> Incluir(DtoDeCadastro usuarioCadastro)
         {
             //validacoes (email cadastrado, username, etc)
             var usuario = MapeamentoDeUsuario(usuarioCadastro);
@@ -43,6 +43,30 @@ namespace BarberApi.Servicos.Auth
             return resultado.Succeeded;
         }
 
+        public async Task<bool> Editar(DtoDeCadastro usuarioCadastro)
+        {
+            //validacoes (email cadastrado, username, etc)
+            var usuario = MapeamentoDeUsuario(usuarioCadastro);
+            var resultado = await _userManager.UpdateAsync(usuario);
+
+            return resultado.Succeeded;
+        }
+
+        public async Task<Usuario> ObterPorEmail(string email)
+        {
+            var usuario = await _userManager.FindByEmailAsync(email);
+
+            return usuario;
+        }
+
+        public async Task<Usuario> ObterPorId(int id)
+        {
+            var usuario = await _userManager.FindByIdAsync(id.ToString());
+
+            return usuario;
+        }
+
+
         public Usuario MapeamentoDeUsuario(DtoDeCadastro usuarioCadastro)
         {
             var usuario = new Usuario()
@@ -53,13 +77,6 @@ namespace BarberApi.Servicos.Auth
                 PhoneNumber = usuarioCadastro.Telefone,
                 Cpf = usuarioCadastro.Cpf,
             };
-
-            return usuario;
-        }
-
-        public async Task<Usuario> ObterUsuarioPorEmail(string email)
-        {
-            var usuario = await _userManager.FindByEmailAsync(email);
 
             return usuario;
         }

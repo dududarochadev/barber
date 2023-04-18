@@ -1,4 +1,4 @@
-import { Box, Container, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Container, Paper, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { ReactNode } from 'react';
 import { BarraSuperior } from '../components/Barber/barra-superior/BarraSuperior';
 
@@ -21,16 +21,23 @@ export const LayoutBase: React.FC<Props> = ({ children, titulo, barraDeFerrament
         <main style={{ flexGrow: 1, maxWidth: 'lg' }}>
           <Container maxWidth='lg'>
             {titulo &&
-              <Box
-                padding={1}
-                display='flex'
-                alignItems='center'
-                gap={1}
-                height={theme.spacing(smDown ? 4 : mdDown ? 6 : 8)}
-              >
-                <Typography noWrap variant={smDown ? 'h6' : mdDown ? 'h5' : 'h4'}>
-                  {titulo}
-                </Typography>
+              <Box display='flex' justifyContent='center'>
+                <Paper
+                  variant='outlined'
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: theme.palette.primary.main,
+                    borderRadius: 28,
+                    minWidth: theme.spacing(50),
+                    padding: 1,
+                    marginBottom: 3
+                  }}>
+                  <Typography noWrap variant={smDown ? 'h6' : mdDown ? 'h5' : 'h4'}>
+                    {titulo}
+                  </Typography>
+                </Paper>
               </Box>
             }
 

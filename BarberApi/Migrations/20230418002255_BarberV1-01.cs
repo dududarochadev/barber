@@ -10,66 +10,46 @@ namespace BarberApi.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "NomeCompleto",
-                table: "AspNetUsers",
-                newName: "Nome");
-
-            migrationBuilder.AddColumn<string>(
-                name: "Foto",
-                table: "AspNetUsers",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "Sexo",
-                table: "AspNetUsers",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
             migrationBuilder.CreateTable(
                 name: "Estabelecimento",
                 columns: table => new
                 {
-                    CodigoEstabelecimento = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cnpj = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Estabelecimento", x => x.CodigoEstabelecimento);
+                    table.PrimaryKey("PK_Estabelecimento", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "FuncionarioServico",
                 columns: table => new
                 {
-                    CodigoFuncionarioServico = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CodigoFuncionario = table.Column<int>(type: "int", nullable: false),
                     CodigoServico = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FuncionarioServico", x => x.CodigoFuncionarioServico);
+                    table.PrimaryKey("PK_FuncionarioServico", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Funcionario",
                 columns: table => new
                 {
-                    CodigoFuncionario = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CodigoUsuario = table.Column<int>(type: "int", nullable: false),
-                    CodigoEstabelecimento = table.Column<int>(type: "int", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    EstabelecimentoCodigoEstabelecimento = table.Column<int>(type: "int", nullable: false)
+                    EstabelecimentoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Funcionario", x => x.CodigoFuncionario);
+                    table.PrimaryKey("PK_Funcionario", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Funcionario_AspNetUsers_UsuarioId",
                         column: x => x.UsuarioId,
@@ -77,10 +57,10 @@ namespace BarberApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Funcionario_Estabelecimento_EstabelecimentoCodigoEstabelecimento",
-                        column: x => x.EstabelecimentoCodigoEstabelecimento,
+                        name: "FK_Funcionario_Estabelecimento_EstabelecimentoId",
+                        column: x => x.EstabelecimentoId,
                         principalTable: "Estabelecimento",
-                        principalColumn: "CodigoEstabelecimento",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -88,26 +68,26 @@ namespace BarberApi.Migrations
                 name: "Servico",
                 columns: table => new
                 {
-                    CodigoServico = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    FuncionarioCodigoFuncionario = table.Column<int>(type: "int", nullable: true)
+                    FuncionarioId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Servico", x => x.CodigoServico);
+                    table.PrimaryKey("PK_Servico", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Servico_Funcionario_FuncionarioCodigoFuncionario",
-                        column: x => x.FuncionarioCodigoFuncionario,
+                        name: "FK_Servico_Funcionario_FuncionarioId",
+                        column: x => x.FuncionarioId,
                         principalTable: "Funcionario",
-                        principalColumn: "CodigoFuncionario");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Funcionario_EstabelecimentoCodigoEstabelecimento",
+                name: "IX_Funcionario_EstabelecimentoId",
                 table: "Funcionario",
-                column: "EstabelecimentoCodigoEstabelecimento");
+                column: "EstabelecimentoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Funcionario_UsuarioId",
@@ -115,9 +95,9 @@ namespace BarberApi.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Servico_FuncionarioCodigoFuncionario",
+                name: "IX_Servico_FuncionarioId",
                 table: "Servico",
-                column: "FuncionarioCodigoFuncionario");
+                column: "FuncionarioId");
         }
 
         /// <inheritdoc />
@@ -134,19 +114,6 @@ namespace BarberApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Estabelecimento");
-
-            migrationBuilder.DropColumn(
-                name: "Foto",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Sexo",
-                table: "AspNetUsers");
-
-            migrationBuilder.RenameColumn(
-                name: "Nome",
-                table: "AspNetUsers",
-                newName: "NomeCompleto");
         }
     }
 }

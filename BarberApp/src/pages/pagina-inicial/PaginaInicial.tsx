@@ -3,7 +3,7 @@ import { LayoutBase } from '../../shared/layouts';
 import { Avatar, Box, Grid, Icon, IconButton, Paper, useMediaQuery, useTheme } from '@mui/material';
 import { useUserContext } from '../../shared/contexts/UserContext';
 import { useQuery } from '@tanstack/react-query';
-import { servicoDeUsuario } from '../../shared/services/api/usuario/servicoDeUsuario';
+import { servicoDeAutenticacao } from '../../shared/services/api/auth/servicoDeAutenticacao';
 
 export const PaginaInicial = () => {
   const theme = useTheme();
@@ -12,7 +12,7 @@ export const PaginaInicial = () => {
 
   const { data: usuario } = useQuery(
     ['usuario'],
-    () => servicoDeUsuario.obterPorId(idUsuario)
+    () => servicoDeAutenticacao.obterPorId(idUsuario)
   );
 
   return (

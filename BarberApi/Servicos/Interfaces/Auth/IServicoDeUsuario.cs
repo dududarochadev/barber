@@ -1,5 +1,5 @@
+using BarberApi.Dados.Autenticacao.Dtos;
 using BarberApi.Dados.Models;
-using BarberApi.Dto;
 
 namespace BarberApi.Servicos.Interfaces.Auth
 {
@@ -7,8 +7,10 @@ namespace BarberApi.Servicos.Interfaces.Auth
     {
         Task<bool> Login(DtoDeLogin login);
         Task Logout();
-        Task<bool> Cadastrar(DtoDeCadastro usuarioCadastro);
+        Task<bool> Incluir(DtoDeCadastro usuarioCadastro);
+        Task<bool> Editar(DtoDeCadastro usuarioCadastro);
         Usuario MapeamentoDeUsuario(DtoDeCadastro usuarioCadastro);
-        Task<Usuario> ObterUsuarioPorEmail(string email);
+        Task<Usuario> ObterPorEmail(string email);
+        Task<Usuario> ObterPorId(int id);
     }
 }

@@ -21,7 +21,7 @@ export const AppRoutes: React.FC = () => {
       },
       {
         icon: 'apartment',
-        label: 'Estabelecimento',
+        label: 'Meu estabelecimento',
         path: '/estabelecimentos'
       }
     ]);

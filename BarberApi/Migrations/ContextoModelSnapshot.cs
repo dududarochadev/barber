@@ -24,11 +24,11 @@ namespace BarberApi.Migrations
 
             modelBuilder.Entity("BarberApi.Dados.Models.Estabelecimento", b =>
                 {
-                    b.Property<int>("CodigoEstabelecimento")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CodigoEstabelecimento"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Cnpj")
                         .HasColumnType("nvarchar(max)");
@@ -37,34 +37,28 @@ namespace BarberApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CodigoEstabelecimento");
+                    b.HasKey("Id");
 
                     b.ToTable("Estabelecimento");
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Funcionario", b =>
                 {
-                    b.Property<int>("CodigoFuncionario")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CodigoFuncionario"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CodigoEstabelecimento")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CodigoUsuario")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstabelecimentoCodigoEstabelecimento")
+                    b.Property<int>("EstabelecimentoId")
                         .HasColumnType("int");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("CodigoFuncionario");
+                    b.HasKey("Id");
 
-                    b.HasIndex("EstabelecimentoCodigoEstabelecimento");
+                    b.HasIndex("EstabelecimentoId");
 
                     b.HasIndex("UsuarioId");
 
@@ -73,11 +67,11 @@ namespace BarberApi.Migrations
 
             modelBuilder.Entity("BarberApi.Dados.Models.FuncionarioServico", b =>
                 {
-                    b.Property<int>("CodigoFuncionarioServico")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CodigoFuncionarioServico"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CodigoFuncionario")
                         .HasColumnType("int");
@@ -85,32 +79,32 @@ namespace BarberApi.Migrations
                     b.Property<int>("CodigoServico")
                         .HasColumnType("int");
 
-                    b.HasKey("CodigoFuncionarioServico");
+                    b.HasKey("Id");
 
                     b.ToTable("FuncionarioServico");
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Servico", b =>
                 {
-                    b.Property<int>("CodigoServico")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CodigoServico"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("FuncionarioCodigoFuncionario")
+                    b.Property<int?>("FuncionarioId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("CodigoServico");
+                    b.HasKey("Id");
 
-                    b.HasIndex("FuncionarioCodigoFuncionario");
+                    b.HasIndex("FuncionarioId");
 
                     b.ToTable("Servico");
                 });
@@ -333,7 +327,7 @@ namespace BarberApi.Migrations
                 {
                     b.HasOne("BarberApi.Dados.Models.Estabelecimento", "Estabelecimento")
                         .WithMany("Funcionarios")
-                        .HasForeignKey("EstabelecimentoCodigoEstabelecimento")
+                        .HasForeignKey("EstabelecimentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -352,7 +346,7 @@ namespace BarberApi.Migrations
                 {
                     b.HasOne("BarberApi.Dados.Models.Funcionario", null)
                         .WithMany("Servicos")
-                        .HasForeignKey("FuncionarioCodigoFuncionario");
+                        .HasForeignKey("FuncionarioId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

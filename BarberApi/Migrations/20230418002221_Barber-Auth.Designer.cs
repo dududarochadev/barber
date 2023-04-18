@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberApi.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20230417225552_BarberV1-01")]
-    partial class BarberV101
+    [Migration("20230418002221_Barber-Auth")]
+    partial class BarberAuth
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,99 +24,6 @@ namespace BarberApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Estabelecimento", b =>
-                {
-                    b.Property<int>("CodigoEstabelecimento")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CodigoEstabelecimento"));
-
-                    b.Property<string>("Cnpj")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CodigoEstabelecimento");
-
-                    b.ToTable("Estabelecimento");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Funcionario", b =>
-                {
-                    b.Property<int>("CodigoFuncionario")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CodigoFuncionario"));
-
-                    b.Property<int>("CodigoEstabelecimento")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CodigoUsuario")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstabelecimentoCodigoEstabelecimento")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CodigoFuncionario");
-
-                    b.HasIndex("EstabelecimentoCodigoEstabelecimento");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Funcionario");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.FuncionarioServico", b =>
-                {
-                    b.Property<int>("CodigoFuncionarioServico")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CodigoFuncionarioServico"));
-
-                    b.Property<int>("CodigoFuncionario")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CodigoServico")
-                        .HasColumnType("int");
-
-                    b.HasKey("CodigoFuncionarioServico");
-
-                    b.ToTable("FuncionarioServico");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Servico", b =>
-                {
-                    b.Property<int>("CodigoServico")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CodigoServico"));
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("FuncionarioCodigoFuncionario")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("CodigoServico");
-
-                    b.HasIndex("FuncionarioCodigoFuncionario");
-
-                    b.ToTable("Servico");
-                });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Usuario", b =>
                 {
@@ -332,32 +239,6 @@ namespace BarberApi.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BarberApi.Dados.Models.Funcionario", b =>
-                {
-                    b.HasOne("BarberApi.Dados.Models.Estabelecimento", "Estabelecimento")
-                        .WithMany("Funcionarios")
-                        .HasForeignKey("EstabelecimentoCodigoEstabelecimento")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BarberApi.Dados.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Estabelecimento");
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Servico", b =>
-                {
-                    b.HasOne("BarberApi.Dados.Models.Funcionario", null)
-                        .WithMany("Servicos")
-                        .HasForeignKey("FuncionarioCodigoFuncionario");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
@@ -407,16 +288,6 @@ namespace BarberApi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Estabelecimento", b =>
-                {
-                    b.Navigation("Funcionarios");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Funcionario", b =>
-                {
-                    b.Navigation("Servicos");
                 });
 #pragma warning restore 612, 618
         }
