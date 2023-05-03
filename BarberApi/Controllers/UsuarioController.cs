@@ -129,7 +129,10 @@ namespace BarberApi.Controllers
         public async Task<ActionResult<DtoDeUsuario>> ObterPorId([FromQuery] int id)
         {
             var usuario = await _servicoDeUsuario.ObterPorId(id);
-            return Ok(usuario);
+
+            var dtoUsuario = _servicoDeUsuario.MapearEntidadeParaDto(usuario);
+
+            return Ok(dtoUsuario);
         }
     }
 }
