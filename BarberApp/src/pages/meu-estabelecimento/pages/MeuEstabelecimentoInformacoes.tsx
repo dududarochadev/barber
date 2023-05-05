@@ -18,7 +18,6 @@ export const MeuEstabelecimentoInformacoes: React.FC = () => {
         flexDirection='column'
         gap={3}
         padding={3}
-        height={800}
       >
         <Box display='flex' justifyContent='space-between'>
           <Avatar src='' sx={{ width: 150, height: 150 }}>USU</Avatar>
