@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { PaginaInicial, Agendamentos, Perfil, Login, Agendamento } from '../pages';
-import { Estabelecimentos } from '../pages/estabelecimentos/Estabelecimentos';
+import { PaginaInicial, Perfil, Login, Agendamento, MeuEstabelecimento } from '../pages';
 import { useMenuContext } from '../shared/contexts';
 
 export const AppRoutes: React.FC = () => {
@@ -15,11 +14,6 @@ export const AppRoutes: React.FC = () => {
         path: '/perfil'
       },
       {
-        icon: 'calendar_month',
-        label: 'Agendamentos',
-        path: '/agendamentos'
-      },
-      {
         icon: 'apartment',
         label: 'Meu estabelecimento',
         path: '/estabelecimentos'
@@ -30,8 +24,7 @@ export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/agendamento" element={<Agendamento />} />
-      <Route path="/agendamentos" element={<Agendamentos />} />
-      <Route path="/estabelecimentos" element={<Estabelecimentos />} />
+      <Route path="/estabelecimentos" element={<MeuEstabelecimento />} />
       <Route path="/login" element={<Login />} />
       <Route path="/pagina-inicial" element={<PaginaInicial />} />
       <Route path="/perfil" element={<Perfil />} />
