@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Avatar, Box, Card, Paper, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Card, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { LayoutBase } from '../../shared/layouts';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Button } from '../../shared/components/MUI/button/Button';
@@ -8,6 +8,8 @@ import dayjs from 'dayjs';
 const horarios = ['09:00', '09:15', '09:30', '09:45', '10:00', '13:00', '15:15', '18:00', '09:12', '09:10', '09:35', '10:40', '13:10', '15:25', '18:10'];
 
 const profissionais = ['Sem preferência', 'Dudu', 'Kauan', 'Rafa', 'Beto'];
+
+const servico = 'Corte Masculino';
 
 export const Agendamento: React.FC = () => {
   const [horarioSelecionado, setHorarioSelecionado] = useState<string>();
@@ -23,8 +25,32 @@ export const Agendamento: React.FC = () => {
             <Stack marginTop={3} spacing={3}>
               <Typography variant='h5'><strong>Estabelecimento:</strong> Beto Hair</Typography>
 
+              <Box display='flex' alignItems='center' gap={2}>
+                <Typography variant='h5'>Serviço:</Typography>
 
-              <Typography variant='h5'>Profissionais:</Typography>
+                <Card
+                  variant='elevation'
+                >
+                  <Box
+                    display='flex'
+                    flexDirection='row'
+                    justifyContent='space-between'
+                    alignItems='center'
+                    padding={2}
+                    gap={2}
+                    width={250}
+                  >
+                    <Typography>{servico}</Typography>
+
+                    <IconButton>
+                      <Icon>edit</Icon>
+                    </IconButton>
+                  </Box>
+                </Card>
+              </Box>
+
+              <Typography variant='h5'>Profissional:</Typography>
+
               <Box display='flex' gap={2} flexWrap='wrap'>
                 {profissionais.map((item) =>
                   <Card
@@ -46,6 +72,7 @@ export const Agendamento: React.FC = () => {
 
                       <Box display='flex' flexDirection='column' justifyContent='end' alignItems='end'>
                         <Typography align='center'>{item}</Typography>
+
                         {item !== 'Sem preferência' && (
                           <Button label='Ver perfil' variant='text' minWidth={0} sx={{ padding: 0, fontSize: 10, textDecoration: 'underline', color: '#3BACEC' }} />
                         )}
@@ -57,6 +84,7 @@ export const Agendamento: React.FC = () => {
 
               <Box display='flex' alignItems='center' gap={1}>
                 <Typography variant='h6'>Data:</Typography>
+
                 <DatePicker disablePast defaultValue={dayjs()} />
               </Box>
 
