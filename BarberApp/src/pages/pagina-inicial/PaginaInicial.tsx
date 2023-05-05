@@ -6,7 +6,6 @@ import { useQuery } from '@tanstack/react-query';
 import { servicoDeAutenticacao } from '../../shared/services/api/auth/servicoDeAutenticacao';
 import { Button } from '../../shared/components/MUI/button/Button';
 import { useNavigate } from 'react-router-dom';
-import fotoPerfil from '../../shared/assets/fotos-de-perfil/Floripa.jpg';
 
 export const PaginaInicial = () => {
   const theme = useTheme();
@@ -14,12 +13,6 @@ export const PaginaInicial = () => {
   const lgDown = useMediaQuery(theme.breakpoints.down('lg'));
   const { idUsuario } = useUserContext();
   const colorDisabled = theme.palette.text.disabled;
-
-  const styleTypographyHover = {
-    '&:hover': {
-      color: 'blue'
-    }
-  };
 
   const { data: usuario } = useQuery(
     ['usuario'],
@@ -44,7 +37,7 @@ export const PaginaInicial = () => {
             </Box>
 
             <Box display='flex' justifyContent='center' marginBottom={2}>
-              <Avatar src={fotoPerfil} sx={{ height: 150, width: 150 }} />
+              <Avatar src={'/assets/images/fotos-de-perfil/Floripa.jpg'} sx={{ height: 150, width: 150 }} />
             </Box>
 
 

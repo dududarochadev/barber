@@ -21,8 +21,7 @@ export const Button: React.FC<TButtonProps> = ({
   return (
     <MuiButton
       {...rest}
-      // sx={Object.assign({}, rest.sx, { borderRadius: 28 })}
-      sx={{ borderRadius: borderRounded ? 28 : 0, minWidth: minWidth }}
+      sx={Object.assign({}, rest.sx, { borderRadius: borderRounded ? 28 : 0, minWidth: minWidth })}
     >
       {
         loading ? (

@@ -8,7 +8,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useUserContext } from '../../shared/contexts/UserContext';
 import { Button } from '../../shared/components/MUI/button/Button';
 import { servicoDeAutenticacao } from '../../shared/services/api/auth/servicoDeAutenticacao';
-import fotoPerfil from '../../shared/assets/fotos-de-perfil/Floripa.jpg';
 
 // interface IFormData {
 //   email: string;
@@ -55,7 +54,7 @@ export const Perfil: React.FC = () => {
               }}
             >
               <Box display='flex' justifyContent='space-between'>
-                <Avatar src={fotoPerfil} sx={{ width: 150, height: 150 }}>USU</Avatar>
+                <Avatar src={'assets/images/fotos-de-perfil/Floripa.jpg'} sx={{ width: 150, height: 150 }}>USU</Avatar>
 
                 <Box>
                   <IconButton onClick={() => setEditarPerfil(true)}>

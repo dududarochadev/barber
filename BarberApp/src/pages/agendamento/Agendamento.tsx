@@ -46,6 +46,9 @@ export const Agendamento: React.FC = () => {
 
                       <Box display='flex' flexDirection='column' justifyContent='end' alignItems='end'>
                         <Typography align='center'>{item}</Typography>
+                        {item !== 'Sem preferência' && (
+                          <Button label='Ver perfil' variant='text' minWidth={0} sx={{ padding: 0, fontSize: 10, textDecoration: 'underline', color: '#3BACEC' }} />
+                        )}
                       </Box>
                     </Box>
                   </Card>
