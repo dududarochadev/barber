@@ -36,14 +36,6 @@ export const MeuEstabelecimentoInformacoes: React.FC = () => {
           <VTextField name='cpf' label='CPF' disabled={!editarPerfil} />
           <VTextField name='telefone' label='Telefone' disabled={!editarPerfil} />
         </Box>
-
-        <Box display='flex' justifyContent='end'>
-          <Button
-            label='Salvar'
-            variant='contained'
-            minWidth={200}
-          />
-        </Box>
       </Box>
     </Form >
   );

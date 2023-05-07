@@ -40,7 +40,6 @@ export const PaginaInicial = () => {
               <Avatar src={'/assets/images/fotos-de-perfil/Floripa.jpg'} sx={{ height: 150, width: 150 }} />
             </Box>
 
-
             <Box display='flex' flexDirection='column' gap={1}>
               <Typography align='center' variant='h6'>{usuario?.nomeCompleto}</Typography>
               <Typography align='center'>{usuario?.email}</Typography>
@@ -65,7 +64,9 @@ export const PaginaInicial = () => {
                       </Box>
 
                       <Box>
-                        <IconButton>
+                        <IconButton
+                          onClick={() => navigate('/agendamento')}
+                        >
                           <Icon>edit</Icon>
                         </IconButton>
                       </Box>
@@ -141,13 +142,6 @@ export const PaginaInicial = () => {
                     </Box>
                   </Paper>
                 </Box>
-
-                {/* <Box display='flex' justifyContent='end'>
-                <Button
-                  label='Agendar'
-                  variant='contained'
-                />
-              </Box> */}
               </Box>
             </Paper>
           </Box>
