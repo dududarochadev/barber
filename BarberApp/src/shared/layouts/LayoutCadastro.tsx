@@ -4,9 +4,10 @@ import { Button } from '../components/MUI/button/Button';
 type Props = {
   children?: React.ReactNode;
   header?: string | React.ReactNode;
+  esconderBotaoSalvar?: boolean;
 };
 
-export const LayoutCadastro: React.FC<Props> = ({ children, header }) => {
+export const LayoutCadastro: React.FC<Props> = ({ children, header, esconderBotaoSalvar }) => {
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -61,9 +62,11 @@ export const LayoutCadastro: React.FC<Props> = ({ children, header }) => {
           <Divider />
         </Grid>
 
-        <Grid item xs={12} display='flex' justifyContent='end' padding={2}>
-          <Button variant='contained' label='Salvar' minWidth={200} />
-        </Grid>
+        {!esconderBotaoSalvar &&
+          <Grid item xs={12} display='flex' justifyContent='end' padding={2}>
+            <Button variant='contained' label='Salvar' minWidth={200} />
+          </Grid>
+        }
       </Grid>
     </Grid >
   );

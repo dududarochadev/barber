@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Avatar, Box, Card, Grid, Icon, IconButton, Paper, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Card, Grid, Icon, IconButton, Paper, Typography } from '@mui/material';
 import { LayoutBase, LayoutCadastro } from '../../shared/layouts';
 import { Button } from '../../shared/components/MUI/button/Button';
 
