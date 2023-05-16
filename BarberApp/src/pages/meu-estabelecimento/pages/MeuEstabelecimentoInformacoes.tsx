@@ -1,10 +1,8 @@
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { Avatar, Box, Icon, IconButton } from '@mui/material';
 import { VTextField } from '../../../shared/forms';
 import { useRef, useState } from 'react';
-import { Button } from '../../../shared/components/MUI/button/Button';
-
+import { Box, Avatar, IconButton, Icon } from '@mui/material';
 
 export const MeuEstabelecimentoInformacoes: React.FC = () => {
   const [editarPerfil, setEditarPerfil] = useState(false);

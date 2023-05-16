@@ -3,8 +3,7 @@ import { LayoutBase, LayoutCadastro } from '../../shared/layouts';
 import { Form } from '@unform/web';
 import { Icon, Tab, Tabs } from '@mui/material';
 import { useCallback, useRef, useState } from 'react';
-import { MeuEstabelecimentoInformacoes } from './pages/MeuEstabelecimentoInformacoes';
-import { MeuEstabelecimentoProfissionais } from './pages/MeuEstabelecimentoProfissionais';
+import { MeuEstabelecimentoInformacoes, MeuEstabelecimentoProfissionais, MeuEstabelecimentoServicos } from './pages';
 
 
 export const MeuEstabelecimento: React.FC = () => {
@@ -26,7 +25,8 @@ export const MeuEstabelecimento: React.FC = () => {
             <Tab label='Informações' icon={<Icon>business</Icon>} iconPosition='start' />
             <Tab label='Profissionais' icon={<Icon>person</Icon>} iconPosition='start' />
             <Tab label='Serviços' icon={<Icon>build</Icon>} iconPosition='start' />
-          </Tabs>}
+          </Tabs>
+        }
         esconderBotaoSalvar={esconderBotaoSalvar}
       >
         <Form ref={formRef} onSubmit={console.log}>
@@ -39,7 +39,7 @@ export const MeuEstabelecimento: React.FC = () => {
           )}
 
           {tabIndex === 2 && (
-            <></>
+            <MeuEstabelecimentoServicos />
           )}
         </Form >
       </LayoutCadastro>

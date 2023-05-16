@@ -53,7 +53,7 @@ export const LayoutCadastro: React.FC<Props> = ({ children, header, esconderBota
         }
 
         <Grid item xs={12} sx={{ height: 600, overflow: 'auto' }}>
-          <Box padding={3} height='100%'>
+          <Box padding={3}>
             {children}
           </Box>
         </Grid>

@@ -1,6 +1,6 @@
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { Box, Card, Icon, IconButton, Popover, Typography, useTheme } from '@mui/material';
+import { Box, Card, Icon, IconButton, Popover, Typography } from '@mui/material';
 import { useCallback, useRef, useState } from 'react';
 import { Button } from '../../../shared/components/MUI/button/Button';
 
@@ -8,9 +8,7 @@ import { Button } from '../../../shared/components/MUI/button/Button';
 export const MeuEstabelecimentoProfissionais: React.FC = () => {
   const [anchorElProfileModalNovo, setAnchorElProfileModalNovo] = useState<null | HTMLElement>(null);
 
-  const theme = useTheme();
   const formRef = useRef<FormHandles>(null);
-
   const isModalNovoOpen = Boolean(anchorElProfileModalNovo);
 
   const openModalNovo = useCallback((event: React.MouseEvent<HTMLElement>) => {

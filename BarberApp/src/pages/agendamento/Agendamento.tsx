@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Avatar, Box, Card, Grid, Icon, IconButton, Paper, Typography } from '@mui/material';
 import { LayoutBase, LayoutCadastro } from '../../shared/layouts';
 import { Button } from '../../shared/components/MUI/button/Button';
@@ -115,10 +115,24 @@ export const Agendamento: React.FC = () => {
   const [diaMesSelecionado, setDiaMesSelecionado] = useState<string>();
   const [profissionalSelecionado, setProfissionalSelecionado] = useState<string>('Sem preferência');
 
+  const carousel = useRef<HTMLElement>(null);
+
+  const handleLeftClick = () => {
+    if (carousel.current) {
+      carousel.current.scrollLeft -= 300;
+    }
+  };
+
+  const handleRightClick = () => {
+    if (carousel.current) {
+      carousel.current.scrollLeft += 300;
+    }
+  };
+
   return (
     <LayoutBase>
       <LayoutCadastro header='Novo agendamento'>
-        <Box display='flex' flexDirection='column' justifyContent='space-between' flex={1} padding={1} gap={3}>
+        <Box display='flex' flexDirection='column' gap={2}>
           <Box display='flex' alignItems='center' gap={2}>
             <Typography variant='h5'>Serviço:</Typography>
 
@@ -174,29 +188,46 @@ export const Agendamento: React.FC = () => {
             )}
           </Grid>
 
-          <Box display='flex' alignItems='center' gap={1} overflow='hidden'>
-            {dias.map((dia) =>
-              <Box
-                key={dia.diaMes}
-                component='span'
-                display='flex'
-                flexDirection='column'
-                justifyContent='center'
-                alignItems='center'
-                sx={{ backgroundColor: dia.diaMes === diaMesSelecionado ? '#fcedfc' : 'none', cursor: 'pointer' }}
-                padding={1}
-                borderRadius={1}
-                onClick={() => setDiaMesSelecionado(dia.diaMes)}
-                draggable
-              >
-                <Typography color='primary'>{dia.diaSemana}</Typography>
+          <Box display='flex' alignItems='center' gap={2}>
+            <IconButton onClick={handleLeftClick}>
+              <Icon>arrow_back</Icon>
+            </IconButton>
 
-                <Box display='flex' alignItems='center'>
-                  <Typography color='primary' fontSize={16} fontWeight='bold'>{dia.diaMes}</Typography>
-                  <Typography color='primary' fontSize={12}>/{dia.mes}</Typography>
+            <Box
+              display='flex'
+              alignItems='center'
+              overflow='hidden'
+              sx={{ scrollBehavior: 'smooth' }}
+              gap={1}
+              ref={carousel}
+            >
+              {dias.map((dia) =>
+                <Box
+                  key={dia.diaMes}
+                  display='flex'
+                  flexDirection='column'
+                  justifyContent='center'
+                  alignItems='center'
+                  component='span'
+                  onClick={() => setDiaMesSelecionado(dia.diaMes)}
+                  sx={{ backgroundColor: dia.diaMes === diaMesSelecionado ? '#fcedfc' : 'none', cursor: 'pointer' }}
+                  padding={1}
+                  borderRadius={1}
+                  draggable
+                >
+                  <Typography color='primary'>{dia.diaSemana}</Typography>
+
+                  <Box display='flex' alignItems='center'>
+                    <Typography color='primary' fontSize={16} fontWeight='bold'>{dia.diaMes}</Typography>
+                    <Typography color='primary' fontSize={12}>/{dia.mes}</Typography>
+                  </Box>
                 </Box>
-              </Box>
-            )}
+              )}
+            </Box>
+
+            <IconButton onClick={handleRightClick}>
+              <Icon>arrow_forward</Icon>
+            </IconButton>
           </Box>
 
           <Typography variant='h6'>Horários disponíveis:</Typography>
