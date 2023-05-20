@@ -16,7 +16,7 @@ export const PaginaInicial = () => {
 
   const { data: usuario } = useQuery(
     ['usuario'],
-    () => servicoDeAutenticacao.obterPorId(idUsuario)
+    () => servicoDeAutenticacao.obterUsuario()
   );
 
   return (

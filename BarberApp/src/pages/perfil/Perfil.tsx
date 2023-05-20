@@ -24,7 +24,7 @@ export const Perfil: React.FC = () => {
 
   const { data: usuario } = useQuery(
     ['usuario'],
-    () => servicoDeAutenticacao.obterPorId(idUsuario)
+    () => servicoDeAutenticacao.obterUsuario()
   );
 
   useEffect(() => {

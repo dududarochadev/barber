@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { Avatar, Box, Card, Grid, Icon, IconButton, Paper, Typography } from '@mui/material';
+import { useRef, useState } from 'react';
+import { Avatar, Box, Card, Dialog, Grid, Icon, IconButton, List, ListItem, ListItemButton, ListItemText, Modal, Paper, Typography, useTheme } from '@mui/material';
 import { LayoutBase, LayoutCadastro } from '../../shared/layouts';
 import { Button } from '../../shared/components/MUI/button/Button';
 
@@ -108,10 +108,12 @@ const dias = [{
 
 const profissionais = ['Sem preferência', 'Dudu', 'Kauan', 'Rafa', 'Beto'];
 
-const servico = 'Corte Masculino';
+const servicos = ['Corte Masculino', 'Corte Masculino 2', 'Corte Masculino 3', 'Corte Masculino 4', 'Corte Masculino 5'];
 
 export const Agendamento: React.FC = () => {
+  const [openModalServico, setOpenModalServico] = useState(false);
   const [horarioSelecionado, setHorarioSelecionado] = useState<string>();
+  const [servicoSelecionado, setServicoSelecionado] = useState<string>(servicos[0]);
   const [diaMesSelecionado, setDiaMesSelecionado] = useState<string>();
   const [profissionalSelecionado, setProfissionalSelecionado] = useState<string>('Sem preferência');
 
@@ -127,6 +129,12 @@ export const Agendamento: React.FC = () => {
     if (carousel.current) {
       carousel.current.scrollLeft += 300;
     }
+  };
+
+  const handleClickServico = (value: string) => {
+    console.log(value);
+    setOpenModalServico(false);
+    setServicoSelecionado(value);
   };
 
   return (
@@ -147,9 +155,9 @@ export const Agendamento: React.FC = () => {
               gap={2}
               width={250}
             >
-              <Typography>{servico}</Typography>
+              <Typography>{servicoSelecionado}</Typography>
 
-              <IconButton>
+              <IconButton onClick={() => setOpenModalServico(true)}>
                 <Icon>edit</Icon>
               </IconButton>
             </Box>
@@ -210,16 +218,19 @@ export const Agendamento: React.FC = () => {
                   alignItems='center'
                   component='span'
                   onClick={() => setDiaMesSelecionado(dia.diaMes)}
-                  sx={{ backgroundColor: dia.diaMes === diaMesSelecionado ? '#fcedfc' : 'none', cursor: 'pointer' }}
+                  sx={{
+                    backgroundColor: dia.diaMes === diaMesSelecionado ? '#c2185b' : 'none',
+                    cursor: 'pointer'
+                  }}
                   padding={1}
                   borderRadius={1}
                   draggable
                 >
-                  <Typography color='primary'>{dia.diaSemana}</Typography>
+                  <Typography color={dia.diaMes === diaMesSelecionado ? 'secondary' : 'primary'}>{dia.diaSemana}</Typography>
 
                   <Box display='flex' alignItems='center'>
-                    <Typography color='primary' fontSize={16} fontWeight='bold'>{dia.diaMes}</Typography>
-                    <Typography color='primary' fontSize={12}>/{dia.mes}</Typography>
+                    <Typography color={dia.diaMes === diaMesSelecionado ? 'secondary' : 'primary'} fontSize={16} fontWeight='bold'>{dia.diaMes}</Typography>
+                    <Typography color={dia.diaMes === diaMesSelecionado ? 'secondary' : 'primary'} fontSize={12}>/{dia.mes}</Typography>
                   </Box>
                 </Box>
               )}
@@ -234,10 +245,42 @@ export const Agendamento: React.FC = () => {
 
           <Box display='flex' alignItems='center' gap={2} flexWrap='wrap'>
             {horarios.map((item) =>
-              <Button key={item} label={item} onClick={() => setHorarioSelecionado(item)} variant={item === horarioSelecionado ? 'contained' : 'outlined'} size='large' borderRounded={false} />
+              <Button
+                key={item}
+                label={item}
+                onClick={() => setHorarioSelecionado(item)}
+                variant={item === horarioSelecionado ? 'contained' : 'outlined'}
+                color='primary'
+                size='large'
+                borderRounded={false}
+              />
             )}
           </Box>
         </Box>
+
+        <Dialog
+          open={openModalServico}
+          onClose={() => setOpenModalServico(false)}
+
+        >
+          <Box width={400} maxHeight={500} overflow='auto'>
+            {servicos.map((item) =>
+              <>
+                <List>
+                  <ListItemButton
+                    key={item}
+                    onClick={() => handleClickServico(item)}
+                    divider
+                  >
+                    <ListItemText>
+                      {item}
+                    </ListItemText>
+                  </ListItemButton>
+                </List>
+              </>
+            )}
+          </Box>
+        </Dialog>
       </LayoutCadastro>
     </LayoutBase>
   );

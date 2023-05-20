@@ -1,16 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Alert, Box, Card, CardActions, CardContent, Divider, Icon, IconButton, InputAdornment, Tooltip, Typography } from '@mui/material';
-
 import * as Yup from 'yup';
-import { VTextField } from '../../shared/forms';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
-import getValidationErrors from '../../shared/helpers/getValidationErrors';
 import { Visibility } from '@mui/icons-material';
-import { gapi } from 'gapi-script';
-import { ICadastroUsuario, ILogin, servicoDeAutenticacao } from '../../shared/services/api/auth/servicoDeAutenticacao';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../../shared/components/MUI/button/Button';
+import { useUserContext } from '../../../contexts/UserContext';
+import { VTextField } from '../../../forms';
+import getValidationErrors from '../../../helpers/getValidationErrors';
+import { ICadastroUsuario, ILogin, servicoDeAutenticacao } from '../../../services/api/auth/servicoDeAutenticacao';
+import { Button } from '../../MUI/button/Button';
 
 interface IFormData {
   nomeCompleto: string,
@@ -45,29 +44,37 @@ const textTooltipPassword =
  - 1 caractere minúsculo
 `;
 
-export const Login: React.FC = () => {
+interface ILoginProps {
+  children: React.ReactNode;
+}
+
+export const Login: React.FC<ILoginProps> = ({ children }) => {
   const [isCadastro, setIsCadastro] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarSenhaConfirmacao, setMostrarSenhaConfirmacao] = useState(false);
   const [isLoadingLogin, setIsLoadingLogin] = useState(false);
   const [isLoadingCadastro, setIsLoadingCadastro] = useState(false);
-  const [mensagemErro, setMensagemErro] = useState(false);
+  const [mensagemErro, setMensagemErro] = useState<string>();
 
   const formRef = useRef<FormHandles>(null);
   const navigate = useNavigate();
+  const { isAuthenticated, login, cadastro } = useUserContext();
 
-  useEffect(() => {
-    function start() {
-      gapi.auth2.init({
-        client_id: '689846891590-gd4uvtfgm641dv0q7drfurgng1qi36ks.apps.googleusercontent.com'
-      });
-    }
+  // useEffect(() => {
+  //   function start() {
+  //     gapi.auth2.init({
+  //       client_id: '689846891590-gd4uvtfgm641dv0q7drfurgng1qi36ks.apps.googleusercontent.com'
+  //     });
+  //   }
 
-    gapi.load('client:auth2', start);
-  });
+  //   gapi.load('client:auth2', start);
+  // });
 
   const handleLogin = useCallback(async (usuario: ILogin) => {
     try {
-      await servicoDeAutenticacao.login(usuario);
+      const resposta = await login(usuario);
+
+      resposta && setMensagemErro(resposta);
 
       navigate('/pagina-inicial');
     }
@@ -79,12 +86,12 @@ export const Login: React.FC = () => {
 
   const handleCadastro = useCallback(async (usuario: ICadastroUsuario) => {
     try {
-      await servicoDeAutenticacao.cadastrar(usuario);
+      cadastro(usuario);
 
       navigate('/pagina-inicial');
     }
-    catch (error) {
-      console.log('erroCadastro');
+    catch (error: any) {
+      setMensagemErro(error.message);
     }
   }, []);
 
@@ -95,7 +102,9 @@ export const Login: React.FC = () => {
   const handleClickCadastroLogin = useCallback(() => {
     formRef.current?.reset();
     formRef.current?.setErrors({});
+    setMensagemErro('');
     setIsCadastro(!isCadastro);
+    setMostrarSenha(false);
   }, [isCadastro]);
 
   const handleSubmit = useCallback(
@@ -112,7 +121,7 @@ export const Login: React.FC = () => {
             nomeCompleto: data.nomeCompleto,
             email: data.email,
             cpf: data.cpf,
-            telefone: data.telefone ?? 0,
+            telefone: data.telefone,
             senha: data.senha,
             confirmacaoDeSenha: data.confirmacaoDeSenha
           }).then(() => {
@@ -144,6 +153,10 @@ export const Login: React.FC = () => {
   //   localStorage.setItem('nome_completo', response.profileObj.name);
   // };
 
+  if (isAuthenticated) return (
+    <>{children}</>
+  );
+
   return !isCadastro ? (
     <Form ref={formRef} onSubmit={handleSubmit}>
       <Box width='100vw' height='100vh' display='flex' alignItems='center' justifyContent='center'>
@@ -152,7 +165,7 @@ export const Login: React.FC = () => {
             <CardContent>
               <Box display='flex' flexDirection='column' gap={2} width={300}>
                 <Typography variant='h5' align='center'>
-                  Faça o login
+                  Login
                 </Typography>
 
                 <Divider variant='middle' />
@@ -171,8 +184,17 @@ export const Login: React.FC = () => {
                   fullWidth
                   label='Senha'
                   name='senha'
-                  type='password'
+                  type={mostrarSenha ? 'text' : 'password'}
                   disabled={isLoadingLogin}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton onClick={() => setMostrarSenha(!mostrarSenha)}>
+                          <Visibility />
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 />
 
                 <Box display='flex' justifyContent='left'>
@@ -244,6 +266,8 @@ export const Login: React.FC = () => {
 
                 <Divider variant='middle' />
 
+                {mensagemErro && <Alert severity='error'>{mensagemErro}</Alert>}
+
                 <VTextField
                   fullWidth
                   label='Nome completo'
@@ -295,12 +319,12 @@ export const Login: React.FC = () => {
                   fullWidth
                   label='Confrme sua senha'
                   name='confirmacaoDeSenha'
-                  type={mostrarSenha ? 'text' : 'password'}
+                  type={mostrarSenhaConfirmacao ? 'text' : 'password'}
                   disabled={isLoadingCadastro}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position='end'>
-                        <IconButton onClick={() => setMostrarSenha(!mostrarSenha)}>
+                        <IconButton onClick={() => setMostrarSenhaConfirmacao(!mostrarSenhaConfirmacao)}>
                           <Visibility />
                         </IconButton>
                       </InputAdornment>

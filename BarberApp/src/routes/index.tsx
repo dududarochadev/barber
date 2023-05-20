@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { PaginaInicial, Perfil, Login, Agendamento, MeuEstabelecimento } from '../pages';
+import { PaginaInicial, Perfil, Agendamento, MeuEstabelecimento } from '../pages';
 import { useMenuContext } from '../shared/contexts';
 
 export const AppRoutes: React.FC = () => {
@@ -25,7 +25,6 @@ export const AppRoutes: React.FC = () => {
     <Routes>
       <Route path="/agendamento" element={<Agendamento />} />
       <Route path="/estabelecimentos" element={<MeuEstabelecimento />} />
-      <Route path="/login" element={<Login />} />
       <Route path="/pagina-inicial" element={<PaginaInicial />} />
       <Route path="/perfil" element={<Perfil />} />
 

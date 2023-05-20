@@ -6,7 +6,8 @@ export interface ILogin {
 }
 
 interface IRetornoLogin {
-  nomeCompleto: string,
+  idUsuario: number,
+  nomeUsuario: string,
   token: string
 }
 
@@ -41,16 +42,16 @@ export interface ICadastroUsuario {
   confirmacaoDeSenha: string,
 }
 
-const cadastrar = async (body: ICadastroUsuario): Promise<boolean> => {
+const cadastrar = async (body: ICadastroUsuario): Promise<IUsuario> => {
   try {
-    const { data } = await Api.post<boolean>(
+    const { data } = await Api.post<IUsuario>(
       '/usuario/cadastrar',
       body
     );
 
     return data;
   } catch (error: any) {
-    throw new Error(error.mensagens);
+    throw new Error(error.response.data);
   }
 };
 
@@ -65,22 +66,34 @@ interface IUsuario {
   foto: string;
 }
 
-const obterPorEmail = async (email: string): Promise<IUsuario> => {
+// const obterPorEmail = async (email: string): Promise<IUsuario> => {
+//   try {
+//     const { data } = await Api.get<IUsuario>(
+//       `/usuario?email=${email}`
+//     );
+
+//     return data;
+//   } catch (error) {
+//     throw new Error((error as { message: string }).message || 'Erro ao obter usuário.');
+//   }
+// };
+
+// const obterPorId = async (id: number): Promise<IUsuario> => {
+//   try {
+//     const { data } = await Api.get<IUsuario>(
+//       `/usuario?id=${id}`
+//     );
+
+//     return data;
+//   } catch (error) {
+//     throw new Error((error as { message: string }).message || 'Erro ao obter usuário.');
+//   }
+// };
+
+const obterUsuario = async (): Promise<IUsuario> => {
   try {
     const { data } = await Api.get<IUsuario>(
-      `/usuario?email=${email}`
-    );
-
-    return data;
-  } catch (error) {
-    throw new Error((error as { message: string }).message || 'Erro ao obter usuário.');
-  }
-};
-
-const obterPorId = async (id: number): Promise<IUsuario> => {
-  try {
-    const { data } = await Api.get<IUsuario>(
-      `/usuario?id=${id}`
+      '/usuario'
     );
 
     return data;
@@ -93,6 +106,7 @@ export const servicoDeAutenticacao = {
   login,
   logout,
   cadastrar,
-  obterPorEmail,
-  obterPorId
+  obterUsuario,
+  // obterPorEmail,
+  // obterPorId
 };
