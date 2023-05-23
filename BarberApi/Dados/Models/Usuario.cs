@@ -12,6 +12,7 @@ namespace BarberApi.Dados.Models
         public Sexo Sexo { get; set; } = Sexo.Nenhum;
         public string? Foto { get; set; }
         public string? Telefone { get; set; }
+        public TipoUsuario TipoUsuario { get; set; } = TipoUsuario.Cliente;
         [JsonIgnore]
         public string Senha { get; set; }
     }

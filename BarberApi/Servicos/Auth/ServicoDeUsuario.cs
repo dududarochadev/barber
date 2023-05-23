@@ -15,17 +15,6 @@ namespace BarberApi.Servicos.Auth
             _db = db;
         }
 
-        // public async Task<bool> Login(DtoDeLogin login)
-        // {
-        //     var resultado = await _signInManager.PasswordSignInAsync(login.Email, login.Senha, true, false);
-        //     return resultado.Succeeded;
-        // }
-
-        // public async Task Logout()
-        // {
-        //     await _signInManager.SignOutAsync();
-        // }
-
         public Usuario Incluir(DtoDeCadastro dtoCadastro)
         {
             //validacoes (email cadastrado, username, etc)
@@ -37,23 +26,14 @@ namespace BarberApi.Servicos.Auth
             return usuario;
         }
 
-        // public async Task<bool> Editar(DtoDeCadastro dtoCadastro)
-        // {
-        //     //validacoes (email cadastrado, username, etc)
-        //     var usuario = MapearDtoDeCadastroParaEntidade(dtoCadastro);
-        //     var resultado = await _userManager.UpdateAsync(usuario);
-
-        //     return resultado.Succeeded;
-        // }
-
         public Usuario ObterPorEmail(string email)
         {
-            return _db.Usuario.FirstOrDefault(usu => usu.Email == email);
+            return _db.Usuario.First(usu => usu.Email == email);
         }
 
         public Usuario ObterPorId(int id)
         {
-            return _db.Usuario.FirstOrDefault(usu => usu.Id == id);
+            return _db.Usuario.First(usu => usu.Id == id);
         }
 
         public Usuario MapearDtoDeCadastroParaEntidade(DtoDeCadastro dtoCadastro)
@@ -98,26 +78,5 @@ namespace BarberApi.Servicos.Auth
 
             return usuario;
         }
-
-        // public async Task<Usuario> GetUserById()
-        // {
-        //     var usuario = new Usuario();
-        //     var jwt = Request.Cookies["jwt"];
-
-        //     if (string.IsNullOrEmpty(jwt))
-        //     {
-        //         return usuario;
-        //     }
-
-        //     var idUsuario = _tokenService.VerificarToken(jwt).Issuer;
-        //     var usuario = await _userManager.FindByIdAsync(idUsuario);
-
-        //     usuario.Id = int.Parse(usuario.Id);
-        //     usuario.Username = usuario.UserName;
-        //     usuario.Email = usuario.Email;
-        //     usuario.Telefone = usuario.PhoneNumber;
-
-        //     return usuario;
-        // }
     }
 }

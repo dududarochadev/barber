@@ -6,8 +6,6 @@ namespace BarberApi.Servicos.Interfaces.Auth
 {
     public interface IServicoDeUsuario
     {
-        // DtoDeRetornoLogin Login(DtoDeLogin login);
-        // void Logout();
         Usuario Incluir(DtoDeCadastro usuarioCadastro);
         // Usuario Editar(DtoDeCadastro usuarioCadastro);
         Usuario MapearDtoDeCadastroParaEntidade(DtoDeCadastro usuarioCadastro);

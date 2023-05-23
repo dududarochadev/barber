@@ -17,7 +17,7 @@ namespace BarberApi.Servicos.Auth
 
         public string GerarToken(Usuario usuario)
         {
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ?? ""));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             var expiration = DateTime.UtcNow.AddDays(14);
 
@@ -33,7 +33,7 @@ namespace BarberApi.Servicos.Auth
         public JwtSecurityToken VerificarToken(string jwt)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ?? "");
 
             var validationParameters = new TokenValidationParameters()
             {

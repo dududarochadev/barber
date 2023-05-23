@@ -1,8 +1,5 @@
 using BarberApi.Dados.Autenticacao.Dtos;
-using BarberApi.Dados.Dtos;
-using BarberApi.Dados.Models;
 using BarberApi.Servicos.Interfaces.Auth;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberApi.Controllers
@@ -28,31 +25,38 @@ namespace BarberApi.Controllers
         [Route("login")]
         public IActionResult Login([FromBody] DtoDeLogin dtoLogin)
         {
-            var usuario = _servicoDeUsuario.ObterPorEmail(dtoLogin.Email);
+            try
+            {
+                var usuario = _servicoDeUsuario.ObterPorEmail(dtoLogin.Email);
 
-            if (usuario == null)
-            {
-                return BadRequest("Usuário ou senha inválidos.");
-            }
-            else if (!BCrypt.Net.BCrypt.Verify(dtoLogin.Senha, usuario.Senha))
-            {
-                return BadRequest("Usuário ou senha inválidos.");
-            }
-            else
-            {
-                var token = _servicoDeToken.GerarToken(usuario);
-
-                Response.Cookies.Append("jwt", token, new CookieOptions
+                if (usuario == null)
                 {
-                    HttpOnly = true,
-                    SameSite = SameSiteMode.None,
-                    Secure = true
-                });
-
-                return Ok(new
+                    return BadRequest("Usuário ou senha inválidos.");
+                }
+                else if (!BCrypt.Net.BCrypt.Verify(dtoLogin.Senha, usuario.Senha))
                 {
-                    message = "Sucesso!"
-                });
+                    return BadRequest("Usuário ou senha inválidos.");
+                }
+                else
+                {
+                    var token = _servicoDeToken.GerarToken(usuario);
+
+                    Response.Cookies.Append("jwt", token, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        SameSite = SameSiteMode.None,
+                        Secure = true
+                    });
+
+                    return Ok(new
+                    {
+                        message = "Sucesso!"
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                return Unauthorized();
             }
         }
 
@@ -77,21 +81,28 @@ namespace BarberApi.Controllers
         [Route("cadastrar")]
         public IActionResult CadastrarUsuario([FromBody] DtoDeCadastro dtoCadastro)
         {
-            if (dtoCadastro.ConfirmacaoDeSenha != dtoCadastro.Senha)
+            try
             {
-                return BadRequest("Senhas não conferem!");
-            }
+                if (dtoCadastro.ConfirmacaoDeSenha != dtoCadastro.Senha)
+                {
+                    return BadRequest("Senhas não conferem!");
+                }
 
-            if (_servicoDeUsuario.ObterPorEmail(dtoCadastro.Email) != null)
+                if (_servicoDeUsuario.ObterPorEmail(dtoCadastro.Email) != null)
+                {
+                    return BadRequest("E-mail já cadastrado!");
+                }
+
+                var usuario = _servicoDeUsuario.Incluir(dtoCadastro);
+
+                Login(new DtoDeLogin { Email = usuario.Email, Senha = usuario.Senha });
+
+                return Ok("Usuário cadastrado com sucesso!");
+            }
+            catch (Exception)
             {
-                return BadRequest("E-mail já cadastrado!");
+                return Unauthorized();
             }
-
-            var usuario = _servicoDeUsuario.Incluir(dtoCadastro);
-
-            Login(new DtoDeLogin { Email = usuario.Email, Senha = usuario.Senha });
-
-            return Ok("Usuário cadastrado com sucesso!");
         }
 
         // [HttpPost]
@@ -123,7 +134,7 @@ namespace BarberApi.Controllers
             {
                 var jwt = Request.Cookies["jwt"];
 
-                var token = _servicoDeToken.VerificarToken(jwt);
+                var token = _servicoDeToken.VerificarToken(jwt ?? "");
 
                 var idUsuario = int.Parse(token.Issuer);
 
