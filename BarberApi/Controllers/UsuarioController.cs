@@ -1,5 +1,6 @@
 using BarberApi.Dados.Autenticacao.Dtos;
 using BarberApi.Dados.Dtos;
+using BarberApi.Dados.Models;
 using BarberApi.Servicos.Interfaces.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,115 +25,118 @@ namespace BarberApi.Controllers
         //TODO ConfirmEmail
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("login")]
-        public async Task<ActionResult<DtoDeRetornoLogin>> Login([FromBody] DtoDeLogin login)
+        public IActionResult Login([FromBody] DtoDeLogin dtoLogin)
         {
-            var resultado = await _servicoDeUsuario.Login(login);
-            var user = User;
+            var usuario = _servicoDeUsuario.ObterPorEmail(dtoLogin.Email);
 
-            if (resultado)
-            {
-                var usuario = await _servicoDeUsuario.ObterPorEmail(login.Email);
-                var token = _servicoDeToken.GerarToken(usuario);
-
-                var retorno = new DtoDeRetornoLogin
-                {
-                    Nome = usuario.Nome,
-                    Token = token
-                };
-
-                return retorno;
-            }
-            else
+            if (usuario == null)
             {
                 return BadRequest("Usuário ou senha inválidos.");
             }
+            else if (!BCrypt.Net.BCrypt.Verify(dtoLogin.Senha, usuario.Senha))
+            {
+                return BadRequest("Usuário ou senha inválidos.");
+            }
+            else
+            {
+                var token = _servicoDeToken.GerarToken(usuario);
+
+                Response.Cookies.Append("jwt", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.None,
+                    Secure = true
+                });
+
+                return Ok(new
+                {
+                    message = "Sucesso!"
+                });
+            }
         }
 
-        // [HttpGet]
+        [HttpPost]
+        [Route("logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("jwt", new CookieOptions()
+            {
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                HttpOnly = true
+            });
+
+            return Ok(new
+            {
+                message = "Sucesso!"
+            });
+        }
+
+        [HttpPost]
+        [Route("cadastrar")]
+        public IActionResult CadastrarUsuario([FromBody] DtoDeCadastro dtoCadastro)
+        {
+            if (dtoCadastro.ConfirmacaoDeSenha != dtoCadastro.Senha)
+            {
+                return BadRequest("Senhas não conferem!");
+            }
+
+            if (_servicoDeUsuario.ObterPorEmail(dtoCadastro.Email) != null)
+            {
+                return BadRequest("E-mail já cadastrado!");
+            }
+
+            var usuario = _servicoDeUsuario.Incluir(dtoCadastro);
+
+            Login(new DtoDeLogin { Email = usuario.Email, Senha = usuario.Senha });
+
+            return Ok("Usuário cadastrado com sucesso!");
+        }
+
+        // [HttpPost]
         // [AllowAnonymous]
-        // [Route("login")]
-        // public ActionResult<string> Login(string returnUrl)
+        // [Route("editar")]
+        // public async Task<ActionResult<bool>> EditarUsuario([FromBody] DtoDeCadastro usuarioCadastro)
         // {
-        //     if (User.Identity.IsAuthenticated)
+        //     if (usuarioCadastro.ConfirmacaoDeSenha != usuarioCadastro.Senha)
         //     {
-        //         return Redirect(returnUrl);
+        //         return BadRequest("Senhas não conferem!");
         //     }
 
-        //     return Unauthorized("Usuário deslogado.");
-        // }
+        //     var resultado = await _servicoDeUsuario.Incluir(usuarioCadastro);
 
-        [HttpPost]
-        // [Authorize]
-        [Route("logout")]
-        public async Task Logout()
-        {
-            await _servicoDeUsuario.Logout();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("cadastrar")]
-        public async Task<ActionResult<bool>> CadastrarUsuario([FromBody] DtoDeCadastro usuarioCadastro)
-        {
-            if (usuarioCadastro.ConfirmacaoDeSenha != usuarioCadastro.Senha)
-            {
-                return BadRequest("Senhas não conferem!");
-            }
-
-            var resultado = await _servicoDeUsuario.Incluir(usuarioCadastro);
-
-            if (resultado)
-            {
-                return Ok("Usuário cadastrado com sucesso!");
-            }
-            else
-            {
-                return BadRequest("Erro ao cadastrar usuário!");
-            }
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("editar")]
-        public async Task<ActionResult<bool>> EditarUsuario([FromBody] DtoDeCadastro usuarioCadastro)
-        {
-            if (usuarioCadastro.ConfirmacaoDeSenha != usuarioCadastro.Senha)
-            {
-                return BadRequest("Senhas não conferem!");
-            }
-
-            var resultado = await _servicoDeUsuario.Incluir(usuarioCadastro);
-
-            if (resultado)
-            {
-                return Ok("Usuário cadastrado com sucesso!");
-            }
-            else
-            {
-                return BadRequest("Erro ao cadastrar usuário!");
-            }
-        }
-
-        // private void SalvarCookie(string nomeCookie)
-        // {
-        //     var cookie = new HttpCookie(nomeCookie);
-
-        //     cookie.Expires = DateTime.Now.AddHours(10);
-        //     cookie.HttpOnly = true;
-
+        //     if (resultado)
+        //     {
+        //         return Ok("Usuário cadastrado com sucesso!");
+        //     }
+        //     else
+        //     {
+        //         return BadRequest("Erro ao cadastrar usuário!");
+        //     }
         // }
 
         [HttpGet]
-        // [Authorize]
-        public async Task<ActionResult<DtoDeUsuario>> ObterPorId([FromQuery] int id)
+        public IActionResult ObterUsuario()
         {
-            var usuario = await _servicoDeUsuario.ObterPorId(id);
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
 
-            var dtoUsuario = _servicoDeUsuario.MapearEntidadeParaDto(usuario);
+                var token = _servicoDeToken.VerificarToken(jwt);
 
-            return Ok(dtoUsuario);
+                var idUsuario = int.Parse(token.Issuer);
+
+                var usuario = _servicoDeUsuario.ObterPorId(idUsuario);
+
+                var dtoUsuario = _servicoDeUsuario.MapearEntidadeParaDto(usuario);
+
+                return Ok(dtoUsuario);
+            }
+            catch (Exception)
+            {
+                return Unauthorized();
+            }
         }
     }
 }

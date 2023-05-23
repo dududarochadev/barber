@@ -6,9 +6,8 @@ export interface ILogin {
 }
 
 interface IRetornoLogin {
-  idUsuario: number,
-  nomeUsuario: string,
-  token: string
+  id: number,
+  nome: string
 }
 
 const login = async (body: ILogin): Promise<IRetornoLogin> => {
@@ -28,8 +27,8 @@ const logout = async () => {
   try {
     await Api.post('/usuario/logout');
 
-  } catch (error) {
-    throw new Error((error as { message: string }).message || 'Erro no logout.');
+  } catch (error: any) {
+    throw new Error(error.response.data);
   }
 };
 

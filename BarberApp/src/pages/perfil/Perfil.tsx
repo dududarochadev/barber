@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { VTextField } from '../../shared/forms';
 import { LayoutBase } from '../../shared/layouts';
 import { useQuery } from '@tanstack/react-query';
-import { useUserContext } from '../../shared/contexts/UserContext';
 import { Button } from '../../shared/components/MUI/button/Button';
 import { servicoDeAutenticacao } from '../../shared/services/api/auth/servicoDeAutenticacao';
 
@@ -17,24 +16,22 @@ import { servicoDeAutenticacao } from '../../shared/services/api/auth/servicoDeA
 
 export const Perfil: React.FC = () => {
   const [editarPerfil, setEditarPerfil] = useState(false);
-  const [sexoMasculino, setSexoMasculino] = useState(false);
+  const [sexoUsuario, setSexoUsuario] = useState<number>();
 
   const formRef = useRef<FormHandles>(null);
-  const { idUsuario } = useUserContext();
-
   const { data: usuario } = useQuery(
     ['usuario'],
     () => servicoDeAutenticacao.obterUsuario()
   );
 
-  useEffect(() => {
-    usuario && setSexoMasculino(usuario.sexo === 1);
-  }, [usuario]);
-
   const handleSave = useCallback(() => {
     const dados = formRef.current?.getData();
     console.log(dados);
   }, []);
+
+  useEffect(() => {
+    usuario && setSexoUsuario(usuario.sexo);
+  }, [usuario]);
 
   return (
     <LayoutBase>
@@ -78,13 +75,19 @@ export const Perfil: React.FC = () => {
                     label='Masculino'
                     color='secondary'
                     disabled={!editarPerfil}
-                    onClick={() => setSexoMasculino(true)} variant={sexoMasculino ? 'contained' : 'outlined'}
+                    onClick={() => setSexoUsuario(1)} variant={sexoUsuario === 1 ? 'contained' : 'outlined'}
+                  />
+                  <Button
+                    label='Nenhum'
+                    color='secondary'
+                    disabled={!editarPerfil}
+                    onClick={() => setSexoUsuario(0)} variant={sexoUsuario === 0 ? 'contained' : 'outlined'}
                   />
                   <Button
                     label='Feminino'
                     color='secondary'
                     disabled={!editarPerfil}
-                    onClick={() => setSexoMasculino(true)} variant={sexoMasculino ? 'outlined' : 'contained'}
+                    onClick={() => setSexoUsuario(2)} variant={sexoUsuario === 2 ? 'contained' : 'outlined'}
                   />
                 </ButtonGroup>
               </Box>

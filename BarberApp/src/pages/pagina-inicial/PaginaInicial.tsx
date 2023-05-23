@@ -11,7 +11,6 @@ export const PaginaInicial = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const lgDown = useMediaQuery(theme.breakpoints.down('lg'));
-  const { idUsuario } = useUserContext();
   const colorDisabled = theme.palette.text.disabled;
 
   const { data: usuario } = useQuery(

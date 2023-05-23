@@ -1,11 +1,9 @@
 using BarberApi.Dados.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BarberApi.Dados
 {
-    public class Contexto : IdentityDbContext<Usuario, IdentityRole<int>, int>
+    public class Contexto : DbContext
     {
         public Contexto(DbContextOptions<Contexto> options) : base(options)
         {
@@ -15,6 +13,15 @@ namespace BarberApi.Dados
         public DbSet<Estabelecimento> Estabelecimento { get; set; }
         public DbSet<Funcionario> Funcionario { get; set; }
         public DbSet<FuncionarioServico> FuncionarioServico { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Servico> Servico { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Usuario>(ent =>
+            {
+                ent.HasIndex(usu => usu.Email).IsUnique();
+            });
+        }
     }
 }

@@ -5,7 +5,7 @@
 namespace BarberApi.Migrations
 {
     /// <inheritdoc />
-    public partial class BarberV101 : Migration
+    public partial class BarberInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,25 @@ namespace BarberApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Usuario",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Cpf = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Sexo = table.Column<int>(type: "int", nullable: false),
+                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Senha = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuario", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Funcionario",
                 columns: table => new
                 {
@@ -51,15 +70,15 @@ namespace BarberApi.Migrations
                 {
                     table.PrimaryKey("PK_Funcionario", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Funcionario_AspNetUsers_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Funcionario_Estabelecimento_EstabelecimentoId",
                         column: x => x.EstabelecimentoId,
                         principalTable: "Estabelecimento",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Funcionario_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -98,6 +117,12 @@ namespace BarberApi.Migrations
                 name: "IX_Servico_FuncionarioId",
                 table: "Servico",
                 column: "FuncionarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuario_Email",
+                table: "Usuario",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -114,6 +139,9 @@ namespace BarberApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Estabelecimento");
+
+            migrationBuilder.DropTable(
+                name: "Usuario");
         }
     }
 }

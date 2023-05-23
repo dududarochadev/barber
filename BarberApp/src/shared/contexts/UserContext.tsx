@@ -1,12 +1,11 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { ICadastroUsuario, ILogin, servicoDeAutenticacao } from '../services/api/auth/servicoDeAutenticacao';
 
 interface IUserContextData {
-  idUsuario: number;
-  nomeUsuario: string;
   isAuthenticated: boolean;
   login: (usuario: ILogin) => Promise<string | void>;
   cadastro: (usuario: ICadastroUsuario) => Promise<string | void>;
+  logout: () => void;
 }
 
 const UserContext = createContext({} as IUserContextData);
@@ -15,13 +14,24 @@ export const useUserContext = () => {
   return useContext(UserContext);
 };
 
+export const LOCAL_STORAGE_KEY = 'IS_AUTHENTICATED';
+
 type Props = {
   children?: React.ReactNode,
 };
 
 export const UserProvider: React.FC<Props> = ({ children }) => {
-  const [idUsuario, setIdUsuario] = useState(0);
-  const [nomeUsuario, setNomeUsuario] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const isAuthenticatedStorage = localStorage.getItem(LOCAL_STORAGE_KEY);
+
+    if (isAuthenticatedStorage) {
+      setIsAuthenticated(JSON.parse(isAuthenticatedStorage));
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
 
   const handleLogin = useCallback(async (login: ILogin) => {
     const result = await servicoDeAutenticacao.login(login);
@@ -29,10 +39,8 @@ export const UserProvider: React.FC<Props> = ({ children }) => {
     if (result instanceof Error) {
       return result.message;
     } else {
-      const usuario = await servicoDeAutenticacao.obterUsuario();
-
-      setIdUsuario(usuario.id);
-      setNomeUsuario(usuario.primeiroNome);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(true));
+      setIsAuthenticated(true);
     }
   }, []);
 
@@ -42,17 +50,20 @@ export const UserProvider: React.FC<Props> = ({ children }) => {
     if (result instanceof Error) {
       return result.message;
     } else {
-      const usuario = await servicoDeAutenticacao.obterUsuario();
-
-      setIdUsuario(usuario.id);
-      setNomeUsuario(usuario.primeiroNome);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(true));
+      setIsAuthenticated(true);
     }
   }, []);
 
-  const isAuthenticated = useMemo(() => idUsuario !== 0, [idUsuario]);
+  const handleLogout = useCallback(async () => {
+    await servicoDeAutenticacao.logout();
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(false));
+    setIsAuthenticated(false);
+  }, []);
 
   return (
-    <UserContext.Provider value={{ idUsuario, nomeUsuario, login: handleLogin, cadastro: handleCadastro, isAuthenticated }}>
+    <UserContext.Provider value={{ login: handleLogin, cadastro: handleCadastro, logout: handleLogout, isAuthenticated }}>
       {children}
     </UserContext.Provider>
   );

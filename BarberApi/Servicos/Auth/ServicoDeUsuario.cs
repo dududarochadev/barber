@@ -1,81 +1,70 @@
+using BarberApi.Dados;
 using BarberApi.Dados.Autenticacao.Dtos;
 using BarberApi.Dados.Dtos;
 using BarberApi.Dados.Models;
 using BarberApi.Servicos.Interfaces.Auth;
-using Microsoft.AspNetCore.Identity;
 
 namespace BarberApi.Servicos.Auth
 {
     public class ServicoDeUsuario : IServicoDeUsuario
     {
-        private readonly UserManager<Usuario> _userManager;
-        private readonly SignInManager<Usuario> _signInManager;
+        private readonly Contexto _db;
 
-        public ServicoDeUsuario(
-            UserManager<Usuario> userManager,
-            SignInManager<Usuario> signInManager)
+        public ServicoDeUsuario(Contexto db)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
+            _db = db;
         }
 
-        public async Task<bool> Login(DtoDeLogin login)
-        {
-            var resultado = await _signInManager.PasswordSignInAsync(login.Email, login.Senha, true, false);
-            return resultado.Succeeded;
-        }
+        // public async Task<bool> Login(DtoDeLogin login)
+        // {
+        //     var resultado = await _signInManager.PasswordSignInAsync(login.Email, login.Senha, true, false);
+        //     return resultado.Succeeded;
+        // }
 
-        public async Task Logout()
-        {
-            await _signInManager.SignOutAsync();
-        }
+        // public async Task Logout()
+        // {
+        //     await _signInManager.SignOutAsync();
+        // }
 
-        public async Task<bool> Incluir(DtoDeCadastro usuarioCadastro)
+        public Usuario Incluir(DtoDeCadastro dtoCadastro)
         {
             //validacoes (email cadastrado, username, etc)
-            var usuario = MapearDtoDeCadastroParaEntidade(usuarioCadastro);
-            var resultado = await _userManager.CreateAsync(usuario, usuarioCadastro.Senha);
+            var usuario = MapearDtoDeCadastroParaEntidade(dtoCadastro);
 
-            if (resultado.Succeeded)
-            {
-                await _signInManager.SignInAsync(usuario, false);
-            }
-
-            return resultado.Succeeded;
-        }
-
-        public async Task<bool> Editar(DtoDeCadastro usuarioCadastro)
-        {
-            //validacoes (email cadastrado, username, etc)
-            var usuario = MapearDtoDeCadastroParaEntidade(usuarioCadastro);
-            var resultado = await _userManager.UpdateAsync(usuario);
-
-            return resultado.Succeeded;
-        }
-
-        public async Task<Usuario> ObterPorEmail(string email)
-        {
-            var usuario = await _userManager.FindByEmailAsync(email);
+            _db.Add(usuario);
+            usuario.Id = _db.SaveChanges();
 
             return usuario;
         }
 
-        public async Task<Usuario> ObterPorId(int id)
-        {
-            var usuario = await _userManager.FindByIdAsync(id.ToString());
+        // public async Task<bool> Editar(DtoDeCadastro dtoCadastro)
+        // {
+        //     //validacoes (email cadastrado, username, etc)
+        //     var usuario = MapearDtoDeCadastroParaEntidade(dtoCadastro);
+        //     var resultado = await _userManager.UpdateAsync(usuario);
 
-            return usuario;
+        //     return resultado.Succeeded;
+        // }
+
+        public Usuario ObterPorEmail(string email)
+        {
+            return _db.Usuario.FirstOrDefault(usu => usu.Email == email);
         }
 
-        public Usuario MapearDtoDeCadastroParaEntidade(DtoDeCadastro usuarioCadastro)
+        public Usuario ObterPorId(int id)
+        {
+            return _db.Usuario.FirstOrDefault(usu => usu.Id == id);
+        }
+
+        public Usuario MapearDtoDeCadastroParaEntidade(DtoDeCadastro dtoCadastro)
         {
             var usuario = new Usuario()
             {
-                UserName = usuarioCadastro.Email,
-                Email = usuarioCadastro.Email,
-                Nome = usuarioCadastro.NomeCompleto,
-                PhoneNumber = usuarioCadastro.Telefone,
-                Cpf = usuarioCadastro.Cpf,
+                Email = dtoCadastro.Email,
+                Nome = dtoCadastro.NomeCompleto,
+                Telefone = dtoCadastro.Telefone,
+                Cpf = dtoCadastro.Cpf,
+                Senha = BCrypt.Net.BCrypt.HashPassword(dtoCadastro.Senha)
             };
 
             return usuario;
@@ -83,15 +72,28 @@ namespace BarberApi.Servicos.Auth
 
         public DtoDeUsuario MapearEntidadeParaDto(Usuario entidade)
         {
+            var indexEspacoNome = entidade.Nome.IndexOf(" ");
+
+            string primeiroNome;
+
+            if (indexEspacoNome > 0)
+            {
+                primeiroNome = entidade.Nome.Substring(0, indexEspacoNome);
+            }
+            else
+            {
+                primeiroNome = entidade.Nome;
+            }
+
             var usuario = new DtoDeUsuario()
             {
                 NomeCompleto = entidade.Nome,
-                PrimeiroNome = entidade.Nome.Substring(0, entidade.Nome.IndexOf(" ")),
+                PrimeiroNome = primeiroNome,
                 Cpf = entidade.Cpf,
                 Email = entidade.Email,
                 Foto = entidade.Foto,
                 Sexo = entidade.Sexo,
-                Telefone = entidade.PhoneNumber
+                Telefone = entidade.Telefone
             };
 
             return usuario;

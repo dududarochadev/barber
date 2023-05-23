@@ -79,7 +79,8 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
       navigate('/pagina-inicial');
     }
     catch (error: any) {
-      setMensagemErro(error.message);
+      const msg = error.message.substring(0, 40);
+      setMensagemErro(msg);
     }
 
   }, []);
@@ -91,7 +92,8 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
       navigate('/pagina-inicial');
     }
     catch (error: any) {
-      setMensagemErro(error.message);
+      const msg = error.message.substring(0, 40);
+      setMensagemErro(msg);
     }
   }, []);
 

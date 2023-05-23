@@ -1,9 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 using BarberApi.Dados.Models;
 using BarberApi.Servicos.Interfaces.Auth;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BarberApi.Servicos.Auth
@@ -19,21 +17,12 @@ namespace BarberApi.Servicos.Auth
 
         public string GerarToken(Usuario usuario)
         {
-            var claims = new List<Claim>();
-
-            if (!string.IsNullOrEmpty(usuario.UserName))
-            {
-                claims.Add(new Claim(ClaimTypes.Name, usuario.Nome));
-            }
-
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             var expiration = DateTime.UtcNow.AddDays(14);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
+                issuer: usuario.Id.ToString(),
                 expires: expiration,
                 signingCredentials: signingCredentials
             );
@@ -41,22 +30,22 @@ namespace BarberApi.Servicos.Auth
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        // public JwtSecurityToken VerificarToken(string jwt)
-        // {
-        //     var tokenHandler = new JwtSecurityTokenHandler();
-        //     var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+        public JwtSecurityToken VerificarToken(string jwt)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
 
-        //     var validationParameters = new TokenValidationParameters()
-        //     {
-        //         IssuerSigningKey = new SymmetricSecurityKey(key),
-        //         ValidateIssuerSigningKey = true,
-        //         ValidateIssuer = false,
-        //         ValidateAudience = false
-        //     };
+            var validationParameters = new TokenValidationParameters()
+            {
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
 
-        //     tokenHandler.ValidateToken(jwt, validationParameters, out SecurityToken validatedToken);
+            tokenHandler.ValidateToken(jwt, validationParameters, out SecurityToken validatedToken);
 
-        //     return (JwtSecurityToken)validatedToken;
-        // }
+            return (JwtSecurityToken)validatedToken;
+        }
     }
 }

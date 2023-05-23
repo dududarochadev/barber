@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { useUserContext } from '../../../contexts/UserContext';
 import { useMenuContext } from '../../../contexts';
 import { servicoDeAutenticacao } from '../../../services/api/auth/servicoDeAutenticacao';
+import { useQuery } from '@tanstack/react-query';
 
 interface IListItemLinkProps {
   to: string;
@@ -36,12 +37,12 @@ export const MenuUsuario: React.FC = () => {
   const { isMenuOpen, openMenu, closeMenu, menuOptions, anchorElProfile } = useMenuContext();
   const theme = useTheme();
   const lgDown = useMediaQuery(theme.breakpoints.down('lg'));
-  const { nomeUsuario } = useUserContext();
+  const { logout } = useUserContext();
 
-  const handleLogout = useCallback(async () => {
-    await servicoDeAutenticacao.logout();
-  }, []);
-
+  const { data: usuario } = useQuery(
+    ['usuario'],
+    () => servicoDeAutenticacao.obterUsuario()
+  );
 
   return (
     <>
@@ -57,7 +58,7 @@ export const MenuUsuario: React.FC = () => {
           <Avatar
             sx={{ height: theme.spacing(4), width: theme.spacing(4) }}
           >US</Avatar>
-          {!lgDown && <Typography variant='button'>Olá, <strong>{nomeUsuario}</strong>.</Typography>}
+          {!lgDown && <Typography variant='button'>Olá, <strong>{usuario?.primeiroNome ?? 'Usuario'}</strong>.</Typography>}
           <Icon>expand_more</Icon>
         </Box>
       </Button>
@@ -93,7 +94,7 @@ export const MenuUsuario: React.FC = () => {
           <Button
             variant="outlined"
             startIcon={<Icon>logout_rounded</Icon>}
-            onClick={handleLogout}
+            onClick={logout}
           >
             Encerrar sessão
           </Button>
