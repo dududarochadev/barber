@@ -1,7 +1,7 @@
 using System.Text;
 using BarberApi.Dados;
-using BarberApi.Servicos.Auth;
-using BarberApi.Servicos.Interfaces.Auth;
+using BarberApi.Servicos;
+using BarberApi.Servicos.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

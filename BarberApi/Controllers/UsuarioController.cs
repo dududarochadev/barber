@@ -1,5 +1,5 @@
 using BarberApi.Dados.Autenticacao.Dtos;
-using BarberApi.Servicos.Interfaces.Auth;
+using BarberApi.Servicos.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberApi.Controllers

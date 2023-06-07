@@ -1,10 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using BarberApi.Dados.Models;
-using BarberApi.Servicos.Interfaces.Auth;
+using BarberApi.Servicos.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BarberApi.Servicos.Auth
+namespace BarberApi.Servicos
 {
     public class ServicoDeToken : IServicoDeToken
     {

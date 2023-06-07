@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using BarberApi.Dados.Models;
 
-namespace BarberApi.Servicos.Interfaces.Auth
+namespace BarberApi.Servicos.Interfaces
 {
     public interface IServicoDeToken
     {

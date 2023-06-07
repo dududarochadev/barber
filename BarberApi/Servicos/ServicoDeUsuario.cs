@@ -2,9 +2,9 @@ using BarberApi.Dados;
 using BarberApi.Dados.Autenticacao.Dtos;
 using BarberApi.Dados.Dtos;
 using BarberApi.Dados.Models;
-using BarberApi.Servicos.Interfaces.Auth;
+using BarberApi.Servicos.Interfaces;
 
-namespace BarberApi.Servicos.Auth
+namespace BarberApi.Servicos
 {
     public class ServicoDeUsuario : IServicoDeUsuario
     {
