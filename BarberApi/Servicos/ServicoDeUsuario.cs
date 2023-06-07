@@ -21,19 +21,23 @@ namespace BarberApi.Servicos
             var usuario = MapearDtoDeCadastroParaEntidade(dtoCadastro);
 
             _db.Add(usuario);
-            usuario.Id = _db.SaveChanges();
+            _db.SaveChanges();
 
             return usuario;
         }
 
-        public Usuario ObterPorEmail(string email)
+        public Usuario? ObterPorEmail(string email)
         {
-            return _db.Usuario.First(usu => usu.Email == email);
+            var usuario = _db.Usuario.FirstOrDefault(usu => usu.Email == email);
+
+            return usuario;
         }
 
-        public Usuario ObterPorId(int id)
+        public Usuario? ObterPorId(int id)
         {
-            return _db.Usuario.First(usu => usu.Id == id);
+            var usuario = _db.Usuario.FirstOrDefault(usu => usu.Id == id);
+
+            return usuario;
         }
 
         public Usuario MapearDtoDeCadastroParaEntidade(DtoDeCadastro dtoCadastro)

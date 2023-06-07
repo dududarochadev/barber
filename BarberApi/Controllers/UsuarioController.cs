@@ -1,4 +1,5 @@
 using BarberApi.Dados.Autenticacao.Dtos;
+using BarberApi.Dados.Dtos;
 using BarberApi.Servicos.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +40,11 @@ namespace BarberApi.Controllers
                 }
                 else
                 {
+                    if (!string.IsNullOrEmpty(Request.Cookies["jwt"]))
+                    {
+                        Logout();
+                    }
+
                     var token = _servicoDeToken.GerarToken(usuario);
 
                     Response.Cookies.Append("jwt", token, new CookieOptions
@@ -95,7 +101,7 @@ namespace BarberApi.Controllers
 
                 var usuario = _servicoDeUsuario.Incluir(dtoCadastro);
 
-                Login(new DtoDeLogin { Email = usuario.Email, Senha = usuario.Senha });
+                Login(new DtoDeLogin { Email = dtoCadastro.Email, Senha = dtoCadastro.Senha });
 
                 return Ok("Usuário cadastrado com sucesso!");
             }
@@ -140,9 +146,15 @@ namespace BarberApi.Controllers
 
                 var usuario = _servicoDeUsuario.ObterPorId(idUsuario);
 
-                var dtoUsuario = _servicoDeUsuario.MapearEntidadeParaDto(usuario);
-
-                return Ok(dtoUsuario);
+                if (usuario != null)
+                {
+                    var dtoUsuario = _servicoDeUsuario.MapearEntidadeParaDto(usuario);
+                    return Ok(dtoUsuario);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
             catch (Exception)
             {

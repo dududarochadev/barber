@@ -58,7 +58,7 @@ export const MenuUsuario: React.FC = () => {
           <Avatar
             sx={{ height: theme.spacing(4), width: theme.spacing(4) }}
           >US</Avatar>
-          {!lgDown && <Typography variant='button'>Olá, <strong>{usuario?.primeiroNome ?? 'Usuario'}</strong>.</Typography>}
+          {!lgDown && <Typography variant='button'>Olá, <strong>{usuario?.primeiroNome ?? 'Usuario'}</strong></Typography>}
           <Icon>expand_more</Icon>
         </Box>
       </Button>

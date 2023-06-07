@@ -10,7 +10,7 @@ namespace BarberApi.Servicos.Interfaces
         // Usuario Editar(DtoDeCadastro usuarioCadastro);
         Usuario MapearDtoDeCadastroParaEntidade(DtoDeCadastro usuarioCadastro);
         DtoDeUsuario MapearEntidadeParaDto(Usuario usuarioCadastro);
-        Usuario ObterPorEmail(string email);
-        Usuario ObterPorId(int id);
+        Usuario? ObterPorEmail(string email);
+        Usuario? ObterPorId(int id);
     }
 }

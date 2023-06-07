@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../../contexts/UserContext';
 import { VTextField } from '../../../forms';
 import getValidationErrors from '../../../helpers/getValidationErrors';
-import { ICadastroUsuario, ILogin, servicoDeAutenticacao } from '../../../services/api/auth/servicoDeAutenticacao';
+import { ICadastroUsuario, ILogin } from '../../../services/api/auth/servicoDeAutenticacao';
 import { Button } from '../../MUI/button/Button';
 
 interface IFormData {
@@ -95,10 +95,6 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
       const msg = error.message.substring(0, 40);
       setMensagemErro(msg);
     }
-  }, []);
-
-  const handleContinue = useCallback(() => {
-    formRef.current?.submitForm();
   }, []);
 
   const handleClickCadastroLogin = useCallback(() => {
@@ -191,7 +187,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position='end'>
-                        <IconButton onClick={() => setMostrarSenha(!mostrarSenha)}>
+                        <IconButton tabIndex={-1} onClick={() => setMostrarSenha(!mostrarSenha)}>
                           <Visibility />
                         </IconButton>
                       </InputAdornment>
@@ -220,14 +216,13 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
                   label='Entrar'
                   variant='contained'
                   disabled={isLoadingLogin}
-                  onClick={handleContinue}
                   loading={isLoadingLogin}
                   type='submit'
                 />
 
-                <Box display='flex' justifyContent='center'>
+                {/* <Box display='flex' justifyContent='center'>
                   <Typography>Ou</Typography>
-                </Box>
+                </Box> */}
 
                 {/* <GoogleLogin
                   clientId='689846891590-gd4uvtfgm641dv0q7drfurgng1qi36ks.apps.googleusercontent.com'
@@ -309,7 +304,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position='end'>
-                        <IconButton onClick={() => setMostrarSenha(!mostrarSenha)}>
+                        <IconButton tabIndex={-1} onClick={() => setMostrarSenha(!mostrarSenha)}>
                           <Visibility />
                         </IconButton>
                       </InputAdornment>
@@ -326,7 +321,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position='end'>
-                        <IconButton onClick={() => setMostrarSenhaConfirmacao(!mostrarSenhaConfirmacao)}>
+                        <IconButton tabIndex={-1} onClick={() => setMostrarSenhaConfirmacao(!mostrarSenhaConfirmacao)}>
                           <Visibility />
                         </IconButton>
                       </InputAdornment>
@@ -336,7 +331,13 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
 
                 <Box display='flex' alignItems='center'>
                   <Typography fontSize={12}>Regras de senha</Typography>
-                  <Tooltip title={<span style={{ whiteSpace: 'pre-line' }}>{textTooltipPassword}</span>} placement='top' arrow>
+                  <Tooltip
+                    title={
+                      <span style={{ whiteSpace: 'pre-line' }}>{textTooltipPassword}</span>
+                    }
+                    placement='top'
+                    arrow
+                  >
                     <IconButton><Icon sx={{ fontSize: 14 }}>help_outline</Icon></IconButton>
                   </Tooltip>
                 </Box>
@@ -361,9 +362,8 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
                   label='Cadastrar'
                   variant='contained'
                   disabled={isLoadingCadastro}
-                  onClick={handleContinue}
-                  type='submit'
                   loading={isLoadingCadastro}
+                  type='submit'
                 />
 
                 <Divider variant='middle' />
