@@ -6,8 +6,8 @@ namespace BarberApi.Dados.Enumeradores
     {
         [Description("Cliente")]
         Cliente = 1,
-        [Description("Funcionário")]
-        Funcionario = 2,
+        [Description("Profissional")]
+        Profissional = 2,
         [Description("Proprietário")]
         Proprietario = 3
     }

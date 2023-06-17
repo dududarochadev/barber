@@ -8,7 +8,7 @@ interface IPessoa {
 
 const getAll = async (page = 1, filter = ''): Promise<IPessoa | Error> => {
   try {
-    const urlRelativa = `/pessoas?_page${page}&_limit${Environment.limiteDeLinhas}&nomeCompleto=${filter}`;
+    const urlRelativa = `/pessoas?_page${page}&_limit${Environment.limiteDeLinhas}&nome=${filter}`;
     const { data } = await Api.get<IPessoa>(urlRelativa);
 
     if (data) {

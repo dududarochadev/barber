@@ -8,11 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../../contexts/UserContext';
 import { VTextField } from '../../../forms';
 import getValidationErrors from '../../../helpers/getValidationErrors';
-import { ICadastroUsuario, ILogin } from '../../../services/api/auth/servicoDeAutenticacao';
+import { ICadastroUsuario, ILogin } from '../../../services/api/servicoDeAutenticacao';
 import { Button } from '../../MUI/button/Button';
 
 interface IFormData {
-  nomeCompleto: string,
+  nome: string,
   email: string,
   cpf?: string,
   telefone?: number,
@@ -26,7 +26,7 @@ const loginSchema = Yup.object().shape({
 });
 
 const createSchema: Yup.Schema<IFormData> = Yup.object().shape({
-  nomeCompleto: Yup.string().required().min(5),
+  nome: Yup.string().required().min(5),
   email: Yup.string().email().required(),
   cpf: Yup.string(),
   senha: Yup.string().required().min(5).matches(
@@ -116,7 +116,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
           setIsLoadingCadastro(true);
 
           handleCadastro({
-            nomeCompleto: data.nomeCompleto,
+            nome: data.nome,
             email: data.email,
             cpf: data.cpf,
             telefone: data.telefone,
@@ -268,7 +268,7 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
                 <VTextField
                   fullWidth
                   label='Nome completo'
-                  name='nomeCompleto'
+                  name='nome'
                   disabled={isLoadingCadastro}
                 />
 

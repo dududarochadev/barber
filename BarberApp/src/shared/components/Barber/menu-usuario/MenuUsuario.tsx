@@ -3,7 +3,7 @@ import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { useCallback } from 'react';
 import { useUserContext } from '../../../contexts/UserContext';
 import { useMenuContext } from '../../../contexts';
-import { servicoDeAutenticacao } from '../../../services/api/auth/servicoDeAutenticacao';
+import { servicoDeAutenticacao } from '../../../services/api/servicoDeAutenticacao';
 import { useQuery } from '@tanstack/react-query';
 
 interface IListItemLinkProps {
@@ -41,7 +41,7 @@ export const MenuUsuario: React.FC = () => {
 
   const { data: usuario } = useQuery(
     ['usuario'],
-    () => servicoDeAutenticacao.obterUsuario()
+    () => servicoDeAutenticacao.obterUsuarioDoCookie()
   );
 
   return (

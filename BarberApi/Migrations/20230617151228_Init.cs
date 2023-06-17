@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BarberApi.Migrations
 {
     /// <inheritdoc />
-    public partial class BarberInit : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,11 +18,26 @@ namespace BarberApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cnpj = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Cnpj = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Estabelecimento", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Servico",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Servico", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,9 +64,7 @@ namespace BarberApi.Migrations
                 name: "Profissional",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     EstabelecimentoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -64,31 +77,11 @@ namespace BarberApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Profissional_Usuario_UsuarioId",
-                        column: x => x.UsuarioId,
+                        name: "FK_Profissional_Usuario_Id",
+                        column: x => x.Id,
                         principalTable: "Usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Servico",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ProfissionalId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Servico", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Servico_Profissional_ProfissionalId",
-                        column: x => x.ProfissionalId,
-                        principalTable: "Profissional",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -97,20 +90,27 @@ namespace BarberApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    DataAgendamento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
                     ServicoId = table.Column<int>(type: "int", nullable: false),
                     ProfissionalId = table.Column<int>(type: "int", nullable: false),
-                    DataAgendamento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UsuarioId = table.Column<int>(type: "int", nullable: true)
+                    EstabelecimentoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Agendamento", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Agendamento_Estabelecimento_EstabelecimentoId",
+                        column: x => x.EstabelecimentoId,
+                        principalTable: "Estabelecimento",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Agendamento_Profissional_ProfissionalId",
                         column: x => x.ProfissionalId,
                         principalTable: "Profissional",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Agendamento_Servico_ServicoId",
                         column: x => x.ServicoId,
@@ -121,34 +121,55 @@ namespace BarberApi.Migrations
                         name: "FK_Agendamento_Usuario_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuario",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ProfissionalServico",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProfissionalId = table.Column<int>(type: "int", nullable: false),
-                    ServicoId = table.Column<int>(type: "int", nullable: false)
+                    ProfissionaisId = table.Column<int>(type: "int", nullable: false),
+                    ServicosId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProfissionalServico", x => x.Id);
+                    table.PrimaryKey("PK_ProfissionalServico", x => new { x.ProfissionaisId, x.ServicosId });
                     table.ForeignKey(
-                        name: "FK_ProfissionalServico_Profissional_ProfissionalId",
-                        column: x => x.ProfissionalId,
+                        name: "FK_ProfissionalServico_Profissional_ProfissionaisId",
+                        column: x => x.ProfissionaisId,
                         principalTable: "Profissional",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProfissionalServico_Servico_ServicoId",
-                        column: x => x.ServicoId,
+                        name: "FK_ProfissionalServico_Servico_ServicosId",
+                        column: x => x.ServicosId,
                         principalTable: "Servico",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Proprietario",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Proprietario", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Proprietario_Profissional_Id",
+                        column: x => x.Id,
+                        principalTable: "Profissional",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Agendamento_EstabelecimentoId",
+                table: "Agendamento",
+                column: "EstabelecimentoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Agendamento_ProfissionalId",
@@ -171,24 +192,9 @@ namespace BarberApi.Migrations
                 column: "EstabelecimentoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Profissional_UsuarioId",
-                table: "Profissional",
-                column: "UsuarioId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProfissionalServico_ProfissionalId",
+                name: "IX_ProfissionalServico_ServicosId",
                 table: "ProfissionalServico",
-                column: "ProfissionalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProfissionalServico_ServicoId",
-                table: "ProfissionalServico",
-                column: "ServicoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Servico_ProfissionalId",
-                table: "Servico",
-                column: "ProfissionalId");
+                column: "ServicosId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuario_Email",
@@ -205,6 +211,9 @@ namespace BarberApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProfissionalServico");
+
+            migrationBuilder.DropTable(
+                name: "Proprietario");
 
             migrationBuilder.DropTable(
                 name: "Servico");

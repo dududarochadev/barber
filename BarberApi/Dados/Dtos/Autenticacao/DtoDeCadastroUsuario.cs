@@ -1,8 +1,8 @@
 namespace BarberApi.Dados.Autenticacao.Dtos
 {
-    public class DtoDeCadastro
+    public class DtoDeCadastroDeUsuario
     {
-        public string NomeCompleto { get; set; }
+        public string Nome { get; set; }
         public string Email { get; set; }
         public string Senha { get; set; }
         public string ConfirmacaoDeSenha { get; set; }

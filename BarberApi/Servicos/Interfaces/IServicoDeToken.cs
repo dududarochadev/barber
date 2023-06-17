@@ -1,11 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
-using BarberApi.Dados.Models;
+using BarberApi.Dados.Dtos;
 
 namespace BarberApi.Servicos.Interfaces
 {
     public interface IServicoDeToken
     {
-        public string GerarToken(Usuario usuario);
+        public string GerarToken(DtoDeUsuario dtoDeUsuario);
         public JwtSecurityToken VerificarToken(string jwt);
     }
 }

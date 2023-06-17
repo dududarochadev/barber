@@ -27,7 +27,7 @@ export const MeuEstabelecimentoInformacoes: React.FC = () => {
           </Box>
         </Box>
 
-        <VTextField name='nomeCompleto' label='Nome' disabled={!editarPerfil} />
+        <VTextField name='nome' label='Nome' disabled={!editarPerfil} />
         <VTextField name='email' label='E-mail' disabled={!editarPerfil} />
 
         <Box display='flex' flexDirection='row' gap={3}>

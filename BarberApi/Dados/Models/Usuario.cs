@@ -15,6 +15,6 @@ namespace BarberApi.Dados.Models
         public TipoUsuario TipoUsuario { get; set; } = TipoUsuario.Cliente;
         [JsonIgnore]
         public string Senha { get; set; }
-        public List<Agendamento> Agendamentos { get; set; }
+        public ICollection<Agendamento> Agendamentos { get; set; }
     }
 }

@@ -6,7 +6,7 @@ import { VTextField } from '../../shared/forms';
 import { LayoutBase } from '../../shared/layouts';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '../../shared/components/MUI/button/Button';
-import { servicoDeAutenticacao } from '../../shared/services/api/auth/servicoDeAutenticacao';
+import { servicoDeAutenticacao } from '../../shared/services/api/servicoDeAutenticacao';
 
 // interface IFormData {
 //   email: string;
@@ -21,7 +21,7 @@ export const Perfil: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { data: usuario } = useQuery(
     ['usuario'],
-    () => servicoDeAutenticacao.obterUsuario()
+    () => servicoDeAutenticacao.obterUsuarioDoCookie()
   );
 
   const handleSave = useCallback(() => {
@@ -60,7 +60,7 @@ export const Perfil: React.FC = () => {
                 </Box>
               </Box>
 
-              <VTextField name='nomeCompleto' label='Nome' disabled={!editarPerfil} />
+              <VTextField name='nome' label='Nome' disabled={!editarPerfil} />
               <VTextField name='email' label='E-mail' disabled={!editarPerfil} />
 
               <Box display='flex' flexDirection='row' gap={3}>

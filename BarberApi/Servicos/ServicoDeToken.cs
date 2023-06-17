@@ -1,6 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using BarberApi.Dados.Models;
+using BarberApi.Dados.Dtos;
 using BarberApi.Servicos.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,14 +15,14 @@ namespace BarberApi.Servicos
             _configuration = configuration;
         }
 
-        public string GerarToken(Usuario usuario)
+        public string GerarToken(DtoDeUsuario dtoDeUsuario)
         {
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ?? ""));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             var expiration = DateTime.UtcNow.AddDays(14);
 
             var token = new JwtSecurityToken(
-                issuer: usuario.Id.ToString(),
+                issuer: dtoDeUsuario.Id.ToString(),
                 expires: expiration,
                 signingCredentials: signingCredentials
             );

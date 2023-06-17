@@ -1,5 +1,7 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using BarberApi.Dados;
+using BarberApi.Dados.Mappings;
 using BarberApi.Servicos;
 using BarberApi.Servicos.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -47,10 +49,16 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddScoped<IServicoDeAgendamento, ServicoDeAgendamento>();
 builder.Services.AddScoped<IServicoDeUsuario, ServicoDeUsuario>();
 builder.Services.AddScoped<IServicoDeToken, ServicoDeToken>();
+builder.Services.AddAutoMapper(typeof(MapperProfile));
 
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 
 var app = builder.Build();
 

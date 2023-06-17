@@ -1,24 +1,28 @@
+using AutoMapper;
 using BarberApi.Dados;
 using BarberApi.Dados.Autenticacao.Dtos;
 using BarberApi.Dados.Dtos;
 using BarberApi.Dados.Models;
 using BarberApi.Servicos.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarberApi.Servicos
 {
     public class ServicoDeUsuario : IServicoDeUsuario
     {
         private readonly Contexto _db;
+        private readonly IMapper _mapper;
 
-        public ServicoDeUsuario(Contexto db)
+        public ServicoDeUsuario(Contexto db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
-        public Usuario Incluir(DtoDeCadastro dtoCadastro)
+        public Usuario Incluir(DtoDeCadastroDeUsuario dtoDeCadastroDeUsuario)
         {
             //validacoes (email cadastrado, username, etc)
-            var usuario = MapearDtoDeCadastroParaEntidade(dtoCadastro);
+            var usuario = _mapper.Map<Usuario>(dtoDeCadastroDeUsuario);
 
             _db.Add(usuario);
             _db.SaveChanges();
@@ -26,61 +30,53 @@ namespace BarberApi.Servicos
             return usuario;
         }
 
-        public Usuario? ObterPorEmail(string email)
+        public Usuario Editar(DtoDeUsuario dtoDeUsuario)
         {
-            var usuario = _db.Usuario.FirstOrDefault(usu => usu.Email == email);
+            //validacoes (email cadastrado, username, etc)
+            var usuario = _db.Usuario.First(u => u.Id == dtoDeUsuario.Id);
+
+            usuario.Email = dtoDeUsuario.Email;
+            usuario.Cpf = dtoDeUsuario.Cpf;
+            usuario.Nome = dtoDeUsuario.Nome;
+            usuario.Sexo = dtoDeUsuario.Sexo;
+            usuario.Telefone = dtoDeUsuario.Telefone;
 
             return usuario;
         }
 
-        public Usuario? ObterPorId(int id)
+        public DtoDeUsuario ObterPorEmail(string email)
         {
-            var usuario = _db.Usuario.FirstOrDefault(usu => usu.Id == id);
+            var usuario = _db.Usuario.Include(u => u.Agendamentos).FirstOrDefault(u => u.Email == email);
 
-            return usuario;
+            var dtoDeUsuario = MapearEntidadeParaDto(usuario);
+
+            return dtoDeUsuario;
         }
 
-        public Usuario MapearDtoDeCadastroParaEntidade(DtoDeCadastro dtoCadastro)
+        public DtoDeUsuario ObterPorId(int id)
         {
-            var usuario = new Usuario()
+            var usuario = _db.Usuario
+                            .Include(u => u.Agendamentos).ThenInclude(a => a.Servico)
+                            .Include(u => u.Agendamentos).ThenInclude(a => a.Estabelecimento)
+                            .Include(u => u.Agendamentos).ThenInclude(a => a.Profissional)
+                            .FirstOrDefault(u => u.Id == id);
+
+            var dtoDeUsuario = MapearEntidadeParaDto(usuario);
+
+            return dtoDeUsuario;
+        }
+
+        public DtoDeUsuario MapearEntidadeParaDto(Usuario? usuario)
+        {
+            var dtoDeUsuario = _mapper.Map<DtoDeUsuario>(usuario);
+
+            if (usuario != null)
             {
-                Email = dtoCadastro.Email,
-                Nome = dtoCadastro.NomeCompleto,
-                Telefone = dtoCadastro.Telefone,
-                Cpf = dtoCadastro.Cpf,
-                Senha = BCrypt.Net.BCrypt.HashPassword(dtoCadastro.Senha)
-            };
-
-            return usuario;
-        }
-
-        public DtoDeUsuario MapearEntidadeParaDto(Usuario entidade)
-        {
-            var indexEspacoNome = entidade.Nome.IndexOf(" ");
-
-            string primeiroNome;
-
-            if (indexEspacoNome > 0)
-            {
-                primeiroNome = entidade.Nome.Substring(0, indexEspacoNome);
+                var indexEspacoNome = usuario.Nome.IndexOf(" ");
+                dtoDeUsuario.PrimeiroNome = indexEspacoNome > 0 ? usuario.Nome[..indexEspacoNome] : usuario.Nome;
             }
-            else
-            {
-                primeiroNome = entidade.Nome;
-            }
 
-            var usuario = new DtoDeUsuario()
-            {
-                NomeCompleto = entidade.Nome,
-                PrimeiroNome = primeiroNome,
-                Cpf = entidade.Cpf,
-                Email = entidade.Email,
-                Foto = entidade.Foto,
-                Sexo = entidade.Sexo,
-                Telefone = entidade.Telefone
-            };
-
-            return usuario;
+            return dtoDeUsuario;
         }
     }
 }

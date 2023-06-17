@@ -1,4 +1,3 @@
-using BarberApi.Dados.Autenticacao.Dtos;
 using BarberApi.Dados.Dtos;
 using BarberApi.Servicos.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -23,143 +22,38 @@ namespace BarberApi.Controllers
         //TODO ConfirmEmail
 
         [HttpPost]
-        [Route("login")]
-        public IActionResult Login([FromBody] DtoDeLogin dtoLogin)
+        [Route("editar")]
+        public IActionResult Editar([FromBody] DtoDeUsuario dtoDeUsuario)
         {
-            try
-            {
-                var usuario = _servicoDeUsuario.ObterPorEmail(dtoLogin.Email);
+            var usuario = _servicoDeUsuario.Editar(dtoDeUsuario);
 
-                if (usuario == null)
-                {
-                    return BadRequest("Usuário ou senha inválidos.");
-                }
-                else if (!BCrypt.Net.BCrypt.Verify(dtoLogin.Senha, usuario.Senha))
-                {
-                    return BadRequest("Usuário ou senha inválidos.");
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(Request.Cookies["jwt"]))
-                    {
-                        Logout();
-                    }
-
-                    var token = _servicoDeToken.GerarToken(usuario);
-
-                    Response.Cookies.Append("jwt", token, new CookieOptions
-                    {
-                        HttpOnly = true,
-                        SameSite = SameSiteMode.None,
-                        Secure = true
-                    });
-
-                    return Ok(new
-                    {
-                        message = "Sucesso!"
-                    });
-                }
-            }
-            catch (Exception)
-            {
-                return Unauthorized();
-            }
+            return Ok(usuario);
         }
-
-        [HttpPost]
-        [Route("logout")]
-        public IActionResult Logout()
-        {
-            Response.Cookies.Delete("jwt", new CookieOptions()
-            {
-                Secure = true,
-                SameSite = SameSiteMode.None,
-                HttpOnly = true
-            });
-
-            return Ok(new
-            {
-                message = "Sucesso!"
-            });
-        }
-
-        [HttpPost]
-        [Route("cadastrar")]
-        public IActionResult CadastrarUsuario([FromBody] DtoDeCadastro dtoCadastro)
-        {
-            try
-            {
-                if (dtoCadastro.ConfirmacaoDeSenha != dtoCadastro.Senha)
-                {
-                    return BadRequest("Senhas não conferem!");
-                }
-
-                if (_servicoDeUsuario.ObterPorEmail(dtoCadastro.Email) != null)
-                {
-                    return BadRequest("E-mail já cadastrado!");
-                }
-
-                var usuario = _servicoDeUsuario.Incluir(dtoCadastro);
-
-                Login(new DtoDeLogin { Email = dtoCadastro.Email, Senha = dtoCadastro.Senha });
-
-                return Ok("Usuário cadastrado com sucesso!");
-            }
-            catch (Exception)
-            {
-                return Unauthorized();
-            }
-        }
-
-        // [HttpPost]
-        // [AllowAnonymous]
-        // [Route("editar")]
-        // public async Task<ActionResult<bool>> EditarUsuario([FromBody] DtoDeCadastro usuarioCadastro)
-        // {
-        //     if (usuarioCadastro.ConfirmacaoDeSenha != usuarioCadastro.Senha)
-        //     {
-        //         return BadRequest("Senhas não conferem!");
-        //     }
-
-        //     var resultado = await _servicoDeUsuario.Incluir(usuarioCadastro);
-
-        //     if (resultado)
-        //     {
-        //         return Ok("Usuário cadastrado com sucesso!");
-        //     }
-        //     else
-        //     {
-        //         return BadRequest("Erro ao cadastrar usuário!");
-        //     }
-        // }
 
         [HttpGet]
-        public IActionResult ObterUsuario()
+        public IActionResult ObterPorId([FromQuery] int id)
         {
-            try
+            var dtoUsuario = _servicoDeUsuario.ObterPorId(id);
+
+            if (dtoUsuario != null)
             {
-                var jwt = Request.Cookies["jwt"];
-
-                var token = _servicoDeToken.VerificarToken(jwt ?? "");
-
-                var idUsuario = int.Parse(token.Issuer);
-
-                var usuario = _servicoDeUsuario.ObterPorId(idUsuario);
-
-                if (usuario != null)
-                {
-                    var dtoUsuario = _servicoDeUsuario.MapearEntidadeParaDto(usuario);
-                    return Ok(dtoUsuario);
-                }
-                else
-                {
-                    return Unauthorized();
-                }
+                return Ok(dtoUsuario);
             }
-            catch (Exception)
+
+            return NotFound("Usuário não encontrado");
+        }
+
+        [HttpGet]
+        public IActionResult ObterPorEmail(string email)
+        {
+            var dtoUsuario = _servicoDeUsuario.ObterPorEmail(email);
+
+            if (dtoUsuario != null)
             {
-                return Unauthorized();
+                return Ok(dtoUsuario);
             }
+
+            return NotFound("Usuário não encontrado");
         }
     }
 }

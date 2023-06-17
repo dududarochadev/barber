@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberApi.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20230607020943_BarberInit")]
-    partial class BarberInit
+    [Migration("20230617180131_Init2")]
+    partial class Init2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,16 +36,24 @@ namespace BarberApi.Migrations
                     b.Property<DateTime>("DataAgendamento")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("EstabelecimentoId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Passado")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ProfissionalId")
                         .HasColumnType("int");
 
                     b.Property<int>("ServicoId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UsuarioId")
+                    b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EstabelecimentoId");
 
                     b.HasIndex("ProfissionalId");
 
@@ -67,6 +75,10 @@ namespace BarberApi.Migrations
                     b.Property<string>("Cnpj")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Endereco")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -74,52 +86,6 @@ namespace BarberApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Estabelecimento");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EstabelecimentoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EstabelecimentoId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Profissional");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.ProfissionalServico", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProfissionalId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ServicoId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfissionalId");
-
-                    b.HasIndex("ServicoId");
-
-                    b.ToTable("ProfissionalServico");
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Servico", b =>
@@ -134,15 +100,10 @@ namespace BarberApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProfissionalId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProfissionalId");
 
                     b.ToTable("Servico");
                 });
@@ -188,12 +149,54 @@ namespace BarberApi.Migrations
                         .IsUnique();
 
                     b.ToTable("Usuario");
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("ProfissionalServico", b =>
+                {
+                    b.Property<int>("ProfissionaisId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServicosId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProfissionaisId", "ServicosId");
+
+                    b.HasIndex("ServicosId");
+
+                    b.ToTable("ProfissionalServico");
+                });
+
+            modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
+                {
+                    b.HasBaseType("BarberApi.Dados.Models.Usuario");
+
+                    b.Property<int>("EstabelecimentoId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("EstabelecimentoId");
+
+                    b.ToTable("Profissional");
+                });
+
+            modelBuilder.Entity("BarberApi.Dados.Models.Proprietario", b =>
+                {
+                    b.HasBaseType("BarberApi.Dados.Models.Profissional");
+
+                    b.ToTable("Proprietario");
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Agendamento", b =>
                 {
-                    b.HasOne("BarberApi.Dados.Models.Profissional", "Profissional")
+                    b.HasOne("BarberApi.Dados.Models.Estabelecimento", "Estabelecimento")
                         .WithMany()
+                        .HasForeignKey("EstabelecimentoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BarberApi.Dados.Models.Profissional", "Profissional")
+                        .WithMany("AgendamentosDeClientes")
                         .HasForeignKey("ProfissionalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -204,13 +207,34 @@ namespace BarberApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BarberApi.Dados.Models.Usuario", null)
+                    b.HasOne("BarberApi.Dados.Models.Usuario", "Usuario")
                         .WithMany("Agendamentos")
-                        .HasForeignKey("UsuarioId");
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estabelecimento");
 
                     b.Navigation("Profissional");
 
                     b.Navigation("Servico");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("ProfissionalServico", b =>
+                {
+                    b.HasOne("BarberApi.Dados.Models.Profissional", null)
+                        .WithMany()
+                        .HasForeignKey("ProfissionaisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BarberApi.Dados.Models.Servico", null)
+                        .WithMany()
+                        .HasForeignKey("ServicosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
@@ -221,51 +245,32 @@ namespace BarberApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BarberApi.Dados.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
+                    b.HasOne("BarberApi.Dados.Models.Usuario", null)
+                        .WithOne()
+                        .HasForeignKey("BarberApi.Dados.Models.Profissional", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Estabelecimento");
-
-                    b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("BarberApi.Dados.Models.ProfissionalServico", b =>
-                {
-                    b.HasOne("BarberApi.Dados.Models.Profissional", "Profissional")
-                        .WithMany()
-                        .HasForeignKey("ProfissionalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BarberApi.Dados.Models.Servico", "Servico")
-                        .WithMany()
-                        .HasForeignKey("ServicoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Profissional");
-
-                    b.Navigation("Servico");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Servico", b =>
+            modelBuilder.Entity("BarberApi.Dados.Models.Proprietario", b =>
                 {
                     b.HasOne("BarberApi.Dados.Models.Profissional", null)
-                        .WithMany("Servicos")
-                        .HasForeignKey("ProfissionalId");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
-                {
-                    b.Navigation("Servicos");
+                        .WithOne()
+                        .HasForeignKey("BarberApi.Dados.Models.Proprietario", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Usuario", b =>
                 {
                     b.Navigation("Agendamentos");
+                });
+
+            modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
+                {
+                    b.Navigation("AgendamentosDeClientes");
                 });
 #pragma warning restore 612, 618
         }

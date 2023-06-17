@@ -6,11 +6,9 @@ namespace BarberApi.Servicos.Interfaces
 {
     public interface IServicoDeUsuario
     {
-        Usuario Incluir(DtoDeCadastro usuarioCadastro);
-        // Usuario Editar(DtoDeCadastro usuarioCadastro);
-        Usuario MapearDtoDeCadastroParaEntidade(DtoDeCadastro usuarioCadastro);
-        DtoDeUsuario MapearEntidadeParaDto(Usuario usuarioCadastro);
-        Usuario? ObterPorEmail(string email);
-        Usuario? ObterPorId(int id);
+        Usuario Incluir(DtoDeCadastroDeUsuario dtoDeCadastroDeUsuario);
+        Usuario Editar(DtoDeUsuario dtoDeUsuario);
+        DtoDeUsuario? ObterPorEmail(string email);
+        DtoDeUsuario? ObterPorId(int id);
     }
 }

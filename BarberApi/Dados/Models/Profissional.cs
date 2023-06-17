@@ -1,14 +1,19 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using BarberApi.Dados.Enumeradores;
+
 namespace BarberApi.Dados.Models
 {
-    public class Profissional
+    [Table("Profissional")]
+    public class Profissional : Usuario
     {
         public Profissional()
         {
-            Servicos = new List<Servico>();
+            TipoUsuario = TipoUsuario.Profissional;
         }
-        public int Id { get; set; }
-        public Usuario Usuario { get; set; }
-        public List<Servico> Servicos { get; set; }
+
+        public int EstabelecimentoId { get; set; }
+        public ICollection<Servico> Servicos { get; set; }
+        public ICollection<Agendamento> AgendamentosDeClientes { get; set; }
         public Estabelecimento Estabelecimento { get; set; }
     }
 }

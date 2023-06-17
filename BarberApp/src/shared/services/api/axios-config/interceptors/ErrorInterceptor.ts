@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { LOCAL_STORAGE_KEY } from '../../../../contexts/UserContext';
+import { LOCAL_STORAGE_KEY_USUARIO_ID } from '../../../../contexts/UserContext';
 
 export const errorInterceptor = (error: AxiosError) => {
 
@@ -8,7 +8,7 @@ export const errorInterceptor = (error: AxiosError) => {
   }
 
   if (error.response?.status === 401) {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(false));
+    localStorage.setItem(LOCAL_STORAGE_KEY_USUARIO_ID, JSON.stringify(0));
     window.location.href = 'http://localhost:3000/pagina-inicial';
   }
 

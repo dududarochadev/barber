@@ -4,6 +4,7 @@ using BarberApi.Dados;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberApi.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20230617151228_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace BarberApi.Migrations
 
                     b.Property<int>("EstabelecimentoId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Passado")
-                        .HasColumnType("bit");
 
                     b.Property<int>("ProfissionalId")
                         .HasColumnType("int");
@@ -97,15 +97,10 @@ namespace BarberApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EstabelecimentoId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EstabelecimentoId");
 
                     b.ToTable("Servico");
                 });
@@ -192,7 +187,7 @@ namespace BarberApi.Migrations
             modelBuilder.Entity("BarberApi.Dados.Models.Agendamento", b =>
                 {
                     b.HasOne("BarberApi.Dados.Models.Estabelecimento", "Estabelecimento")
-                        .WithMany("Agendamentos")
+                        .WithMany()
                         .HasForeignKey("EstabelecimentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -204,12 +199,12 @@ namespace BarberApi.Migrations
                         .IsRequired();
 
                     b.HasOne("BarberApi.Dados.Models.Servico", "Servico")
-                        .WithMany("Agendamentos")
+                        .WithMany()
                         .HasForeignKey("ServicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BarberApi.Dados.Models.Usuario", null)
+                    b.HasOne("BarberApi.Dados.Models.Usuario", "Usuario")
                         .WithMany("Agendamentos")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -220,17 +215,8 @@ namespace BarberApi.Migrations
                     b.Navigation("Profissional");
 
                     b.Navigation("Servico");
-                });
 
-            modelBuilder.Entity("BarberApi.Dados.Models.Servico", b =>
-                {
-                    b.HasOne("BarberApi.Dados.Models.Estabelecimento", "Estabelecimento")
-                        .WithMany("Servicos")
-                        .HasForeignKey("EstabelecimentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Estabelecimento");
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("ProfissionalServico", b =>
@@ -251,7 +237,7 @@ namespace BarberApi.Migrations
             modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
                 {
                     b.HasOne("BarberApi.Dados.Models.Estabelecimento", "Estabelecimento")
-                        .WithMany("Profissionais")
+                        .WithMany()
                         .HasForeignKey("EstabelecimentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -272,20 +258,6 @@ namespace BarberApi.Migrations
                         .HasForeignKey("BarberApi.Dados.Models.Proprietario", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Estabelecimento", b =>
-                {
-                    b.Navigation("Agendamentos");
-
-                    b.Navigation("Profissionais");
-
-                    b.Navigation("Servicos");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Servico", b =>
-                {
-                    b.Navigation("Agendamentos");
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Usuario", b =>
