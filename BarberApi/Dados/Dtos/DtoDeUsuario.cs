@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using BarberApi.Dados.Enumeradores;
-using BarberApi.Dados.Models;
 
 namespace BarberApi.Dados.Dtos
 {

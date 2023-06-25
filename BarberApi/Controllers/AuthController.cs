@@ -129,7 +129,7 @@ namespace BarberApi.Controllers
             }
             catch (Exception exception)
             {
-                return Unauthorized(exception);
+                return Unauthorized(exception.Message);
             }
         }
     }

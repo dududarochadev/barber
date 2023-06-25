@@ -41,13 +41,6 @@ namespace BarberApi.Servicos
             return agendamento;
         }
 
-        public List<Agendamento> ObterAgendamentosPorIdUsuario(int idUsuario)
-        {
-            var agendamentos = _db.Agendamento.Where(a => a.UsuarioId == idUsuario).ToList();
-
-            return agendamentos;
-        }
-
         public void Excluir(int id)
         {
             var agendamento = _db.Agendamento.First(a => a.Id == id);

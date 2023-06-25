@@ -5,7 +5,7 @@ import { Logo } from '../../../assets';
 import { Environment } from '../../../environment';
 import { useQuery } from '@tanstack/react-query';
 import { useAppThemeContext } from '../../../contexts';
-import { servicoDeEstabelecimento } from '../../../services/api/estabelecimento/servicoDeEstabelecimento';
+import { servicoDeEstabelecimento } from '../../../services/api/servicoDeEstabelecimento';
 import { MenuUsuario } from '../menu-usuario/MenuUsuario';
 
 export const BarraSuperior: React.FC = () => {
@@ -15,7 +15,8 @@ export const BarraSuperior: React.FC = () => {
 
   const { data: estabelecimentos } = useQuery(
     ['estabelecimentos'],
-    servicoDeEstabelecimento.obterEstabelecimentos
+    () => servicoDeEstabelecimento.obterPorId(1)
+    //TROCAR O 1
   );
 
   const handleClickImage = () => {
@@ -51,7 +52,7 @@ export const BarraSuperior: React.FC = () => {
               fullWidth
               freeSolo
               noOptionsText="Nenhum resultado encontrado"
-              options={estabelecimentos || []}
+              options={[]}//AJUSTAR PARA BUSCAR ESTABELECIMENTO
               renderInput={(params) => (
                 <TextField
                   {...params}

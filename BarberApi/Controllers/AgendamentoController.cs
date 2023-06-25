@@ -16,8 +16,6 @@ namespace BarberApi.Controllers
             _servicoDeAgendamento = servicoDeAgendamento;
         }
 
-        //TODO ConfirmEmail
-
         [HttpPost]
         public IActionResult Incluir([FromBody] DtoDeAgendamento dtoDeAgendamento)
         {
@@ -41,14 +39,6 @@ namespace BarberApi.Controllers
 
             return Ok(agendamento);
         }
-
-        // [HttpGet]
-        // public List<Agendamento> ObterAgendamentosPorIdUsuario([FromQuery] int idUsuario)
-        // {
-        //     var agendamentos = _servicoDeAgendamento.ObterAgendamentosPorIdUsuario(idUsuario);
-
-        //     return agendamentos;
-        // }
 
         [HttpDelete]
         public IActionResult Excluir([FromQuery] int id)

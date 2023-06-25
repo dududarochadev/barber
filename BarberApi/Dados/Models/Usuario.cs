@@ -5,6 +5,11 @@ namespace BarberApi.Dados.Models
 {
     public class Usuario
     {
+        public Usuario()
+        {
+            Agendamentos = new List<Agendamento>();
+        }
+
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Email { get; set; }

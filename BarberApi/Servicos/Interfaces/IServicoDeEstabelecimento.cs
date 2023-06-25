@@ -3,7 +3,7 @@ using BarberApi.Dados.Models;
 
 namespace BarberApi.Servicos.Interfaces
 {
-    public interface IServicoDeAgendamento : IServicoDeCRUD<Agendamento, DtoDeAgendamento>
+    public interface IServicoDeEstabelecimento : IServicoDeCRUD<Estabelecimento, DtoDeEstabelecimento>
     {
     }
 }

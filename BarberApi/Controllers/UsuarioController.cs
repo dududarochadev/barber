@@ -9,14 +9,10 @@ namespace BarberApi.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IServicoDeUsuario _servicoDeUsuario;
-        private readonly IServicoDeToken _servicoDeToken;
 
-        public UsuarioController(
-            IServicoDeUsuario servicoDeUsuario,
-            IServicoDeToken servicoDeToken)
+        public UsuarioController(IServicoDeUsuario servicoDeUsuario)
         {
             _servicoDeUsuario = servicoDeUsuario;
-            _servicoDeToken = servicoDeToken;
         }
 
         //TODO ConfirmEmail

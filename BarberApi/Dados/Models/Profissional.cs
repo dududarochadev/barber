@@ -9,6 +9,8 @@ namespace BarberApi.Dados.Models
         public Profissional()
         {
             TipoUsuario = TipoUsuario.Profissional;
+            Servicos = new List<Servico>();
+            AgendamentosDeClientes = new List<Agendamento>();
         }
 
         public int EstabelecimentoId { get; set; }

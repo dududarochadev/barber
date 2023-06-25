@@ -1,3 +1,5 @@
+using BarberApi.Dados.Dtos;
+using BarberApi.Servicos.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberApi.Controllers
@@ -6,17 +8,43 @@ namespace BarberApi.Controllers
     [ApiController]
     public class EstabelecimentoController : ControllerBase
     {
-        [HttpGet]
-        // [Authorize]
-        public List<string> ObterEstabelecimentos()
-        {
-            var estabelecimentos = new List<string>() {
-                "La Máfia",
-                "Teste1",
-                "Teste2"
-            };
+        private readonly IServicoDeEstabelecimento _servicoDeEstabelecimento;
 
-            return estabelecimentos;
+        public EstabelecimentoController(IServicoDeEstabelecimento servicoDeEstabelecimento)
+        {
+            _servicoDeEstabelecimento = servicoDeEstabelecimento;
+        }
+
+        [HttpPost]
+        public IActionResult Incluir([FromBody] DtoDeEstabelecimento dtoDeEstabelecimento)
+        {
+            var estabelecimento = _servicoDeEstabelecimento.Incluir(dtoDeEstabelecimento);
+
+            return Ok(estabelecimento);
+        }
+
+        [HttpPut]
+        public IActionResult Editar([FromBody] DtoDeEstabelecimento dtoDeEstabelecimento)
+        {
+            var estabelecimento = _servicoDeEstabelecimento.Editar(dtoDeEstabelecimento);
+
+            return Ok(estabelecimento);
+        }
+
+        [HttpGet]
+        public IActionResult ObterPorId([FromQuery] int id)
+        {
+            var estabelecimento = _servicoDeEstabelecimento.ObterPorId(id);
+
+            return Ok(estabelecimento);
+        }
+
+        [HttpDelete]
+        public IActionResult Excluir([FromQuery] int id)
+        {
+            _servicoDeEstabelecimento.Excluir(id);
+
+            return Ok();
         }
     }
 }
