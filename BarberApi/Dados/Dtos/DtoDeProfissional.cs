@@ -1,9 +1,7 @@
 namespace BarberApi.Dados.Dtos
 {
-    public class DtoDeProfissional
+    public class DtoDeProfissional : DtoDeUsuario
     {
-        public int Id { get; set; }
-        public string Nome { get; set; }
-        public string? Foto { get; set; }
+        public ICollection<DtoDeEstabelecimento> Estabelecimentos { get; set; }
     }
 }

@@ -28,7 +28,6 @@ const loginSchema = Yup.object().shape({
 const createSchema: Yup.Schema<IFormData> = Yup.object().shape({
   nome: Yup.string().required().min(5),
   email: Yup.string().email().required(),
-  cpf: Yup.string(),
   senha: Yup.string().required().min(5).matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/,
     'A senha precisa conter pelo menos 8 caracteres, 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caractere especial'),

@@ -10,5 +10,8 @@ namespace BarberApi.Dados.Models
         {
             TipoUsuario = TipoUsuario.Proprietario;
         }
+
+        public int EstabelecimentoId { get; set; }
+        public Estabelecimento Estabelecimento { get; set; }
     }
 }

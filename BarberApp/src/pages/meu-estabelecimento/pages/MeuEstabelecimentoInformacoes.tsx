@@ -3,14 +3,19 @@ import { Form } from '@unform/web';
 import { VTextField } from '../../../shared/forms';
 import { useRef, useState } from 'react';
 import { Box, Avatar, IconButton, Icon } from '@mui/material';
+import { IEstabelecimento } from '../../../shared/services/api/servicoDeEstabelecimento';
 
-export const MeuEstabelecimentoInformacoes: React.FC = () => {
+interface IProps {
+  Estabelecimento: IEstabelecimento
+}
+
+export const MeuEstabelecimentoInformacoes: React.FC<IProps> = ({ Estabelecimento }) => {
   const [editarPerfil, setEditarPerfil] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
 
   return (
-    <Form ref={formRef} onSubmit={console.log}>
+    <Form ref={formRef} onSubmit={console.log} initialData={Estabelecimento}>
       <Box
         display='flex'
         flexDirection='column'
@@ -28,12 +33,8 @@ export const MeuEstabelecimentoInformacoes: React.FC = () => {
         </Box>
 
         <VTextField name='nome' label='Nome' disabled={!editarPerfil} />
-        <VTextField name='email' label='E-mail' disabled={!editarPerfil} />
-
-        <Box display='flex' flexDirection='row' gap={3}>
-          <VTextField name='cpf' label='CPF' disabled={!editarPerfil} />
-          <VTextField name='telefone' label='Telefone' disabled={!editarPerfil} />
-        </Box>
+        <VTextField name='cnpj' label='Cnpj' disabled={!editarPerfil} />
+        <VTextField name='endereco' label='Endereco' disabled={!editarPerfil} />
       </Box>
     </Form >
   );

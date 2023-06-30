@@ -3,6 +3,7 @@ import { ICadastroUsuario, ILogin, servicoDeAutenticacao } from '../services/api
 
 interface IUserContextData {
   isAuthenticated: boolean;
+  idUsuario: number;
   login: (usuario: ILogin) => Promise<string | void>;
   cadastro: (usuario: ICadastroUsuario) => Promise<string | void>;
   logout: () => void;
@@ -65,7 +66,7 @@ export const UserProvider: React.FC<Props> = ({ children }) => {
   const isAuthenticated = useMemo(() => idUsuario !== 0, [idUsuario]);
 
   return (
-    <UserContext.Provider value={{ login: handleLogin, cadastro: handleCadastro, logout: handleLogout, isAuthenticated }}>
+    <UserContext.Provider value={{ isAuthenticated, idUsuario: idUsuario, login: handleLogin, cadastro: handleCadastro, logout: handleLogout }}>
       {children}
     </UserContext.Provider>
   );

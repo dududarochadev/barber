@@ -62,11 +62,11 @@ export const LayoutCadastro: React.FC<Props> = ({ children, header, esconderBota
           <Divider />
         </Grid>
 
-        {!esconderBotaoSalvar &&
-          <Grid item xs={12} display='flex' justifyContent='end' padding={2}>
+        <Grid item xs={12} display='flex' justifyContent='end' height={68.5} padding={2}>
+          {!esconderBotaoSalvar &&
             <Button variant='contained' label='Salvar' minWidth={200} />
-          </Grid>
-        }
+          }
+        </Grid>
       </Grid>
     </Grid >
   );

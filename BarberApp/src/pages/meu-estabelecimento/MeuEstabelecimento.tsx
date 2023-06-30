@@ -4,11 +4,23 @@ import { Form } from '@unform/web';
 import { Icon, Tab, Tabs } from '@mui/material';
 import { useCallback, useRef, useState } from 'react';
 import { MeuEstabelecimentoInformacoes, MeuEstabelecimentoProfissionais, MeuEstabelecimentoServicos } from './pages';
-
+import { useQuery } from '@tanstack/react-query';
+import { servicoDeProprietario } from '../../shared/services/api/servicoDeProprietario';
+import { useUserContext } from '../../shared/contexts/UserContext';
+import { servicoDeEstabelecimento } from '../../shared/services/api/servicoDeEstabelecimento';
 
 export const MeuEstabelecimento: React.FC = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [esconderBotaoSalvar, setEsconderBotaoSalvar] = useState(false);
+  const { idUsuario } = useUserContext();
+
+  const { data: proprietario } = useQuery(['proprietario'], () =>
+    servicoDeProprietario.obterPorId(idUsuario),
+  );
+
+  const { data: estabelecimento } = useQuery(['estabelecimento', proprietario], () =>
+    proprietario && servicoDeEstabelecimento.obterPorId(proprietario.estabelecimentoId),
+  );
 
   const formRef = useRef<FormHandles>(null);
 
@@ -17,7 +29,7 @@ export const MeuEstabelecimento: React.FC = () => {
     setEsconderBotaoSalvar(index !== 0);
   }, [tabIndex]);
 
-  return (
+  return proprietario ? (
     <LayoutBase>
       <LayoutCadastro
         header={
@@ -30,8 +42,8 @@ export const MeuEstabelecimento: React.FC = () => {
         esconderBotaoSalvar={esconderBotaoSalvar}
       >
         <Form ref={formRef} onSubmit={console.log}>
-          {tabIndex === 0 && (
-            <MeuEstabelecimentoInformacoes />
+          {tabIndex === 0 && estabelecimento && (
+            <MeuEstabelecimentoInformacoes Estabelecimento={estabelecimento} />
           )}
 
           {tabIndex === 1 && (
@@ -44,5 +56,7 @@ export const MeuEstabelecimento: React.FC = () => {
         </Form >
       </LayoutCadastro>
     </LayoutBase>
+  ) : (
+    <>Você não tem permissão para ver esta tela</>
   );
 };

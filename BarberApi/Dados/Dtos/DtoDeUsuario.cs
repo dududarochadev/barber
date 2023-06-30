@@ -13,6 +13,7 @@ namespace BarberApi.Dados.Dtos
         public string? Telefone { get; set; }
         public Sexo Sexo { get; set; }
         public string? Foto { get; set; }
+        public TipoUsuario TipoUsuario { get; set; }
         [JsonIgnore]
         public string Senha { get; set; }
         public ICollection<DtoDeAgendamento> Agendamentos { get; set; }

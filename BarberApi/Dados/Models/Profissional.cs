@@ -11,11 +11,11 @@ namespace BarberApi.Dados.Models
             TipoUsuario = TipoUsuario.Profissional;
             Servicos = new List<Servico>();
             AgendamentosDeClientes = new List<Agendamento>();
+            Estabelecimentos = new List<Estabelecimento>();
         }
 
-        public int EstabelecimentoId { get; set; }
         public ICollection<Servico> Servicos { get; set; }
         public ICollection<Agendamento> AgendamentosDeClientes { get; set; }
-        public Estabelecimento Estabelecimento { get; set; }
+        public ICollection<Estabelecimento> Estabelecimentos { get; set; }
     }
 }

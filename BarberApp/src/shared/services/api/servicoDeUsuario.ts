@@ -10,6 +10,7 @@ export interface IUsuario {
   telefone?: string;
   sexo: number;
   foto: string;
+  tipoUsuario: number;
   agendamentos: IAgendamento[];
 }
 
@@ -37,7 +38,7 @@ const obterPorId = async (id: number): Promise<IUsuario> => {
   }
 };
 
-export const servicoDeAutenticacao = {
+export const servicoDeUsuario= {
   obterPorEmail,
   obterPorId
 };
