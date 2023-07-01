@@ -6,16 +6,16 @@ import { Box, Avatar, IconButton, Icon } from '@mui/material';
 import { IEstabelecimento } from '../../../shared/services/api/servicoDeEstabelecimento';
 
 interface IProps {
-  Estabelecimento: IEstabelecimento
+  estabelecimento: IEstabelecimento
 }
 
-export const MeuEstabelecimentoInformacoes: React.FC<IProps> = ({ Estabelecimento }) => {
+export const MeuEstabelecimentoInformacoes: React.FC<IProps> = ({ estabelecimento }) => {
   const [editarPerfil, setEditarPerfil] = useState(false);
 
   const formRef = useRef<FormHandles>(null);
 
   return (
-    <Form ref={formRef} onSubmit={console.log} initialData={Estabelecimento}>
+    <Form ref={formRef} onSubmit={console.log} initialData={estabelecimento}>
       <Box
         display='flex'
         flexDirection='column'

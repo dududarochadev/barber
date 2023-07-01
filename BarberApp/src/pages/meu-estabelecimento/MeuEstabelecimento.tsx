@@ -35,23 +35,23 @@ export const MeuEstabelecimento: React.FC = () => {
         header={
           <Tabs value={tabIndex} onChange={onChangeTab}>
             <Tab label='Informações' icon={<Icon>business</Icon>} iconPosition='start' />
-            <Tab label='Profissionais' icon={<Icon>person</Icon>} iconPosition='start' />
             <Tab label='Serviços' icon={<Icon>build</Icon>} iconPosition='start' />
+            <Tab label='Profissionais' icon={<Icon>person</Icon>} iconPosition='start' />
           </Tabs>
         }
         esconderBotaoSalvar={esconderBotaoSalvar}
       >
         <Form ref={formRef} onSubmit={console.log}>
           {tabIndex === 0 && estabelecimento && (
-            <MeuEstabelecimentoInformacoes Estabelecimento={estabelecimento} />
+            <MeuEstabelecimentoInformacoes estabelecimento={estabelecimento} />
           )}
 
-          {tabIndex === 1 && (
-            <MeuEstabelecimentoProfissionais />
+          {tabIndex === 1 && estabelecimento && (
+            <MeuEstabelecimentoServicos estabelecimento={estabelecimento} />
           )}
 
-          {tabIndex === 2 && (
-            <MeuEstabelecimentoServicos />
+          {tabIndex === 2 && estabelecimento && (
+            <MeuEstabelecimentoProfissionais estabelecimento={estabelecimento} />
           )}
         </Form >
       </LayoutCadastro>

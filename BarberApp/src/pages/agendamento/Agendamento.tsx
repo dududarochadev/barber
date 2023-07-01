@@ -183,7 +183,6 @@ export const Agendamento: React.FC = () => {
         <Dialog
           open={openModalServico}
           onClose={() => setOpenModalServico(false)}
-
         >
           <Box width={400} maxHeight={500} overflow='auto'>
             {estabelecimento?.servicos.map((item) =>
