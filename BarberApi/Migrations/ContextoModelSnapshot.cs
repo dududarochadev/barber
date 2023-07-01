@@ -85,6 +85,30 @@ namespace BarberApi.Migrations
                     b.ToTable("Estabelecimento");
                 });
 
+            modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Foto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Profissional");
+                });
+
             modelBuilder.Entity("BarberApi.Dados.Models.ProfissionalEstabelecimento", b =>
                 {
                     b.Property<int>("EstabelecimentoId")
@@ -108,7 +132,7 @@ namespace BarberApi.Migrations
                     b.Property<int>("ServicoId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TempoProfissionalServico")
+                    b.Property<int>("DuracaoServicoProfissional")
                         .HasColumnType("int");
 
                     b.HasKey("ProfissionalId", "ServicoId");
@@ -116,6 +140,29 @@ namespace BarberApi.Migrations
                     b.HasIndex("ServicoId");
 
                     b.ToTable("ProfissionalServico");
+                });
+
+            modelBuilder.Entity("BarberApi.Dados.Models.Proprietario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EstabelecimentoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstabelecimentoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Proprietario");
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Servico", b =>
@@ -130,10 +177,10 @@ namespace BarberApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EstabelecimentoId")
+                    b.Property<int>("DuracaoServico")
                         .HasColumnType("int");
 
-                    b.Property<int>("TempoServico")
+                    b.Property<int>("EstabelecimentoId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Valor")
@@ -178,36 +225,12 @@ namespace BarberApi.Migrations
                     b.Property<string>("Telefone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TipoUsuario")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
                     b.ToTable("Usuario");
-
-                    b.UseTptMappingStrategy();
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
-                {
-                    b.HasBaseType("BarberApi.Dados.Models.Usuario");
-
-                    b.ToTable("Profissional");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Proprietario", b =>
-                {
-                    b.HasBaseType("BarberApi.Dados.Models.Profissional");
-
-                    b.Property<int>("EstabelecimentoId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("EstabelecimentoId");
-
-                    b.ToTable("Proprietario");
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Agendamento", b =>
@@ -243,6 +266,15 @@ namespace BarberApi.Migrations
                     b.Navigation("Servico");
                 });
 
+            modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
+                {
+                    b.HasOne("BarberApi.Dados.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("BarberApi.Dados.Models.ProfissionalEstabelecimento", b =>
                 {
                     b.HasOne("BarberApi.Dados.Models.Estabelecimento", null)
@@ -261,7 +293,7 @@ namespace BarberApi.Migrations
             modelBuilder.Entity("BarberApi.Dados.Models.ProfissionalServico", b =>
                 {
                     b.HasOne("BarberApi.Dados.Models.Profissional", null)
-                        .WithMany()
+                        .WithMany("ProfissionalServicos")
                         .HasForeignKey("ProfissionalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -271,6 +303,25 @@ namespace BarberApi.Migrations
                         .HasForeignKey("ServicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BarberApi.Dados.Models.Proprietario", b =>
+                {
+                    b.HasOne("BarberApi.Dados.Models.Estabelecimento", "Estabelecimento")
+                        .WithMany()
+                        .HasForeignKey("EstabelecimentoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BarberApi.Dados.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estabelecimento");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Servico", b =>
@@ -284,37 +335,18 @@ namespace BarberApi.Migrations
                     b.Navigation("Estabelecimento");
                 });
 
-            modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
-                {
-                    b.HasOne("BarberApi.Dados.Models.Usuario", null)
-                        .WithOne()
-                        .HasForeignKey("BarberApi.Dados.Models.Profissional", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Proprietario", b =>
-                {
-                    b.HasOne("BarberApi.Dados.Models.Estabelecimento", "Estabelecimento")
-                        .WithMany()
-                        .HasForeignKey("EstabelecimentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BarberApi.Dados.Models.Profissional", null)
-                        .WithOne()
-                        .HasForeignKey("BarberApi.Dados.Models.Proprietario", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Estabelecimento");
-                });
-
             modelBuilder.Entity("BarberApi.Dados.Models.Estabelecimento", b =>
                 {
                     b.Navigation("Agendamentos");
 
                     b.Navigation("Servicos");
+                });
+
+            modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
+                {
+                    b.Navigation("AgendamentosDeClientes");
+
+                    b.Navigation("ProfissionalServicos");
                 });
 
             modelBuilder.Entity("BarberApi.Dados.Models.Servico", b =>
@@ -325,11 +357,6 @@ namespace BarberApi.Migrations
             modelBuilder.Entity("BarberApi.Dados.Models.Usuario", b =>
                 {
                     b.Navigation("Agendamentos");
-                });
-
-            modelBuilder.Entity("BarberApi.Dados.Models.Profissional", b =>
-                {
-                    b.Navigation("AgendamentosDeClientes");
                 });
 #pragma warning restore 612, 618
         }

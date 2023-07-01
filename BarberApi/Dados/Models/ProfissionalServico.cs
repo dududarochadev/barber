@@ -7,6 +7,6 @@ namespace BarberApi.Dados.Models
     {
         public int ProfissionalId { get; set; }
         public int ServicoId { get; set; }
-        public int TempoProfissionalServico { get; set; }
+        public int DuracaoServicoProfissional { get; set; }
     }
 }

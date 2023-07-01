@@ -35,8 +35,6 @@ namespace BarberApi.Dados
                 .WithMany(ent => ent.Profissionais)
                 .UsingEntity<ProfissionalEstabelecimento>();
 
-            // modelBuilder.Entity<ProfissionalEstabelecimento>().HasKey(ent => new { ent.ProfissionalId, ent.EstabelecimentoId });
-            // modelBuilder.Entity<ProfissionalServico>().HasKey(ent => new { ent.ProfissionalId, ent.ServicoId });
             modelBuilder.Entity<Proprietario>();
 
             modelBuilder.Entity<Servico>();

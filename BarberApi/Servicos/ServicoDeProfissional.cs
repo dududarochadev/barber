@@ -41,13 +41,20 @@ namespace BarberApi.Servicos
             return profissional;
         }
 
+        public Profissional ObterPorUsuarioId(int usuarioId)
+        {
+            var Profissional = _db.Profissional.First(a => a.UsuarioId == usuarioId);
+
+            return Profissional;
+        }
+
         public List<string> ListarHorariosDisponiveis(int id, DtoDeCalendario dia)
         {
             var horasDoDia = Enumerable.Range(00, 24).Select(i => DateTime.MinValue.AddHours(i).TimeOfDay);
 
             var profissional = _db.Profissional.First(p => p.Id == id);
 
-            var horariosOcupados = profissional.Agendamentos
+            var horariosOcupados = profissional.AgendamentosDeClientes
                                     .Where(a => a.DataAgendamento.Day == Convert.ToInt32(dia.DiaDoMes)
                                         && a.DataAgendamento.Month == Convert.ToInt32(dia.Mes))
                                     .Select(a => a.DataAgendamento.TimeOfDay)

@@ -1,11 +1,12 @@
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import { Box, Dialog, Popover } from '@mui/material';
+import { Box, Dialog, Popover, Typography } from '@mui/material';
 import { useRef, useState } from 'react';
 import { Button } from '../../../shared/components/MUI/button/Button';
 import { IEstabelecimento } from '../../../shared/services/api/servicoDeEstabelecimento';
 import { LayoutCadastro } from '../../../shared/layouts';
 import { Listagem } from '../../../shared/components/Barber/listagem/Listagem';
+import { VTextField } from '../../../shared/forms';
 
 interface IProps {
   estabelecimento: IEstabelecimento
@@ -13,6 +14,8 @@ interface IProps {
 
 export const MeuEstabelecimentoServicos: React.FC<IProps> = ({ estabelecimento }) => {
   const [openDialogNovoServico, setOpenDialogNovoServico] = useState(false);
+  const [idServico, setIdServico] = useState(0);
+
   const formRef = useRef<FormHandles>(null);
 
   return (
@@ -41,8 +44,12 @@ export const MeuEstabelecimentoServicos: React.FC<IProps> = ({ estabelecimento }
         onClose={() => setOpenDialogNovoServico(false)}
       >
         <Form ref={formRef} onSubmit={() => null}>
-          <LayoutCadastro>
-            Teste
+          <LayoutCadastro header='Novo serviço'>
+            <Box display='flex' flexDirection='column' gap={2}>
+              <VTextField name='descricao' label='Descrição' />
+              <VTextField name='valor' label='Valor' type='number' />
+              <VTextField name='duracaoServico' label='Duração do servico' type='number' />
+            </Box>
           </LayoutCadastro>
         </Form>
       </Dialog>

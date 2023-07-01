@@ -3,7 +3,6 @@ using BarberApi.Dados;
 using BarberApi.Dados.Dtos;
 using BarberApi.Dados.Models;
 using BarberApi.Servicos.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace BarberApi.Servicos
 {
@@ -39,6 +38,13 @@ namespace BarberApi.Servicos
         public Proprietario ObterPorId(int id)
         {
             var Proprietario = _db.Proprietario.First(a => a.Id == id);
+
+            return Proprietario;
+        }
+
+        public Proprietario ObterPorUsuarioId(int usuarioId)
+        {
+            var Proprietario = _db.Proprietario.First(a => a.UsuarioId == usuarioId);
 
             return Proprietario;
         }

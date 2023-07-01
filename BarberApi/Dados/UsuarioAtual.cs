@@ -11,6 +11,5 @@ namespace BarberApi.Dados
         public static Sexo Sexo;
         public static string? Foto;
         public static string? Telefone;
-        public static TipoUsuario TipoUsuario;
     }
 }

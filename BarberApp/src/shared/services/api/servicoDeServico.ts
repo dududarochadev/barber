@@ -55,9 +55,22 @@ const obterPorId = async (id: number): Promise<IServico> => {
   }
 };
 
+const listarPorEstabelecimento = async (estabelecimentoId: number): Promise<IServico[]> => {
+  try {
+    const { data } = await Api.get<IServico[]>(
+      `/servico/estabelecimento?estabelecimentoId=${estabelecimentoId}`
+    );
+
+    return data;
+  } catch (error) {
+    throw new Error((error as { message: string }).message || 'Erro ao obter servico.');
+  }
+};
+
 export const servicoDeServico = {
   incluir,
   editar,
   excluir,
-  obterPorId
+  obterPorId,
+  listarPorEstabelecimento
 };

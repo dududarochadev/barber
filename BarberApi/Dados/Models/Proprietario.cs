@@ -1,16 +1,13 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using BarberApi.Dados.Enumeradores;
 
 namespace BarberApi.Dados.Models
 {
     [Table("Proprietario")]
-    public class Proprietario : Profissional
+    public class Proprietario
     {
-        public Proprietario()
-        {
-            TipoUsuario = TipoUsuario.Proprietario;
-        }
-
+        public int Id { get; set; }
+        public int UsuarioId { get; set; }
+        public Usuario Usuario { get; set; }
         public int EstabelecimentoId { get; set; }
         public Estabelecimento Estabelecimento { get; set; }
     }

@@ -53,6 +53,7 @@ builder.Services.AddScoped<IServicoDeAgendamento, ServicoDeAgendamento>();
 builder.Services.AddScoped<IServicoDeEstabelecimento, ServicoDeEstabelecimento>();
 builder.Services.AddScoped<IServicoDeProfissional, ServicoDeProfissional>();
 builder.Services.AddScoped<IServicoDeProprietario, ServicoDeProprietario>();
+builder.Services.AddScoped<IServicoDeServico, ServicoDeServico>();
 builder.Services.AddScoped<IServicoDeToken, ServicoDeToken>();
 builder.Services.AddScoped<IServicoDeUsuario, ServicoDeUsuario>();
 builder.Services.AddAutoMapper(typeof(MapperProfile));

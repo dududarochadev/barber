@@ -19,7 +19,7 @@ export const LayoutCadastro: React.FC<Props> = ({ children, header, esconderBota
             <Grid item xs={12}>
               {typeof (header) === 'string' &&
                 <Box display='flex' flex={1} justifyContent='center' padding={3}>
-                  <Typography variant={mdDown ? 'h5' : 'h4'}>{header}</Typography>
+                  <Typography variant={mdDown ? 'h6' : 'h5'}>{header}</Typography>
                 </Box>
               }
 
