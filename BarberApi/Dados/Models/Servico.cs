@@ -12,6 +12,7 @@ namespace BarberApi.Dados.Models
         public string Descricao { get; set; }
         public decimal Valor { get; set; }
         public int EstabelecimentoId { get; set; }
+        public int TempoServico { get; set; }
         public Estabelecimento Estabelecimento { get; set; }
         public ICollection<Agendamento> Agendamentos { get; set; }
         public ICollection<Profissional> Profissionais { get; set; }

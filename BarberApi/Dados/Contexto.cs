@@ -22,15 +22,28 @@ namespace BarberApi.Dados
         {
             modelBuilder.Entity<Agendamento>()
                 .Ignore(a => a.Usuario);
+
             modelBuilder.Entity<Estabelecimento>();
-            modelBuilder.Entity<Profissional>();
+
+            modelBuilder.Entity<Profissional>()
+                .HasMany(ent => ent.Servicos)
+                .WithMany(ent => ent.Profissionais)
+                .UsingEntity<ProfissionalServico>();
+
+            modelBuilder.Entity<Profissional>()
+                .HasMany(ent => ent.Estabelecimentos)
+                .WithMany(ent => ent.Profissionais)
+                .UsingEntity<ProfissionalEstabelecimento>();
+
+            // modelBuilder.Entity<ProfissionalEstabelecimento>().HasKey(ent => new { ent.ProfissionalId, ent.EstabelecimentoId });
+            // modelBuilder.Entity<ProfissionalServico>().HasKey(ent => new { ent.ProfissionalId, ent.ServicoId });
             modelBuilder.Entity<Proprietario>();
+
             modelBuilder.Entity<Servico>();
 
-            modelBuilder.Entity<Usuario>(ent =>
-            {
-                ent.HasIndex(u => u.Email).IsUnique();
-            });
+            modelBuilder.Entity<Usuario>()
+                .HasIndex(ent => ent.Email)
+                .IsUnique();
         }
     }
 }

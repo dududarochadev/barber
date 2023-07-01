@@ -1,3 +1,5 @@
+using AutoMapper.Configuration.Annotations;
+
 namespace BarberApi.Dados.Models
 {
     public class Agendamento
